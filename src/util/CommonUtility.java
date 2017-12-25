@@ -7,16 +7,16 @@ import java.util.Locale;
 /**
  * @varsion 20161227
  * @author ogino
- * @see インスタンス化して使うユーティリティ
+ * @see 共通処理のユーティリティ
  */
-public class CommonFunctions{
+public class CommonUtility{
 
 	/**
 	 * @機能概要：文字列の数値判定
 	 * @引数１：文字列
 	 * @戻り値：数値かどうか
 	 */
-	public boolean isNumber(String str){
+	public static boolean isNumber(String str){
 		boolean result = false;
 
 		try{
@@ -35,7 +35,7 @@ public class CommonFunctions{
 	 * @戻り値：前後のスペースを削除された文字列
 	 * @戻り値_文字列がnull：空文字
 	 */
-	public String trim(String str){
+	public static String trim(String str){
 		if(str == null){
 			str = "";
 		}
@@ -60,7 +60,7 @@ public class CommonFunctions{
 	 * @param separator セパレータ(char)
 	 * @param lastSeparator 最後のセパレータを有りにするかどうか(boolean)
 	 */
-	public String convertFilePath(String oldPath, char separator, boolean lastSeparator){
+	public static String convertFilePath(String oldPath, char separator, boolean lastSeparator){
 		String newPath = oldPath;
 
 		try{
@@ -90,7 +90,7 @@ public class CommonFunctions{
 	 * @see ディレクトリの場合は、再帰で取得したサイズの合計を戻す
 	 * @param ファイルオブジェクト
 	 */
-	public long allFileSize(File file){
+	public static long allFileSize(File file){
 		long size = 0L;
 
 		if (file == null){
@@ -118,7 +118,7 @@ public class CommonFunctions{
 	 * @戻り値_ファイル名が存在しない：空文字
 	 * @戻り値_拡張子が存在しない：空文字
 	 */
-	public String getExtension(String fileName){
+	public static String getExtension(String fileName){
 		String extension = "";
 
 		//ファイル名が存在しない
@@ -138,30 +138,11 @@ public class CommonFunctions{
 	}
 
 	/**
-	 * @機能概要：配列の要素数を1つ増やす
-	 * @引数１：配列
-	 */
-	public Object[] arrayExpansion(Object[] arr){
-		return arrayExpansion(arr, 1);
-	}
-
-	/**
-	 * @機能概要：配列の要素数を増やす
-	 * @引数１：配列
-	 * @引数２：増やす要素数
-	 */
-	public Object[] arrayExpansion(Object[] arr, int increment){
-		Object[] tmp_arr = new String[arr.length + increment];
-		System.arraycopy(arr, 0, tmp_arr, 0, arr.length);
-		return tmp_arr;
-	}
-
-	/**
 	 * @機能概要：曜日計算
 	 * @引数１：日付の文字列
 	 * @引数２：年月日のセパレータ
 	 */
-	public String weekOfDay(String date, String separator){
+	public static String weekOfDay(String date, String separator){
 		String weekOfDay = null;
 		String[] strYmd = new String[3];
 
@@ -196,7 +177,7 @@ public class CommonFunctions{
 	 * @引数１：変換する文字列
 	 * @戻り値：変換された文字列
 	 */
-	public String toDateString(String strDate){
+	public static String toDateString(String strDate){
 		if(strDate == null){
 			strDate = "";
 		}
@@ -216,6 +197,15 @@ public class CommonFunctions{
 		}
 
 		return datetime.toString();
+	}
+
+	/**
+     * 戻り値の型に合わせてキャスト
+     */
+	@SuppressWarnings("unchecked")
+	public static <T> T cast(Object obj) {
+	    T castObj = (T) obj;
+	    return castObj;
 	}
 
 }
