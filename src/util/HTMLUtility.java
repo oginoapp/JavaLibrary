@@ -225,5 +225,30 @@ public class HTMLUtility{
 		return new String(chars);
 	}
 
+	/**
+	 * @機能概要：toHtmlLineの引数1つのオーバーロード
+	 * @引数１：文字列
+	 */
+	public static String toHtmlLine(Object value){
+		return toHtmlLine(value, "black");
+	}
+
+	/**
+	 * @機能概要：渡された文字列を色付きのHTMLに変換する
+	 * @引数１：文字列
+	 * @引数２：色コードもしくは名前
+	 * @戻り値：色のついたHTML
+	 */
+	public static String toHtmlLine(Object value, String color){
+		String html = "";
+		color = HTMLUtility.escapeHtml(color);
+
+		if(value != null){
+			html = HTMLUtility.escapeHtml(String.valueOf(value));
+		}
+
+		return "<span style='color: " + color + "'>" + html + "</span><br/>";
+	}
+
 }
 
