@@ -4,6 +4,7 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
 /**
+ * 画像のテンプレートマッチングを行うクラス
  * new ImageMatcher();
  * imageMatch(screen,img);
  */
