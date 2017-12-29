@@ -3,7 +3,7 @@ package util;
 public class StringUtility{
 
 	/**
-	 * @see 配列のデータを1つの文字列に結合
+	 * @see 配列の文字列データを1つの文字列に結合
 	 * @param arr 結合したい配列
 	 * @param separator セパレータ
 	 */
