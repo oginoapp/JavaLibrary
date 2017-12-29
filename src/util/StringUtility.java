@@ -57,4 +57,66 @@ public class StringUtility{
 		return ((st>0) || (len<value.length)) ? str.substring(st,len) : str;
 	}
 
+	/**
+	 * VB6,VBA互換
+	 * 文字列の指定した位置から指定した長さを取得する
+	 */
+	public static String mid(String str, int start, int len){
+		if (start <= 0){
+			throw new IllegalArgumentException("引数'start'は1以上でなければなりません。");
+		}
+		if (len < 0){
+			throw new IllegalArgumentException("引数'len'は0以上でなければなりません。");
+		}
+		if (str == null || str.length() < start){
+			return "";
+		}
+		if (str.length() < (start + len)){
+			return str.substring(start - 1);
+		}
+		return str.substring(start - 1);
+	}
+
+	/**
+	 * VB6,VBA互換
+	 * 文字列の指定した位置から末尾までを取得する
+	 */
+	public static String mid(String str, int start){
+		return mid(str, start, str.length());
+	}
+
+	/**
+	 * VB6,VBA互換
+	 * 文字列の先頭から指定した長さの文字列を取得する
+	 */
+	public static String left(String str, int len){
+		if (len < 0){
+			throw new IllegalArgumentException("引数'len'は0以上でなければなりません。");
+		}
+		if (str == null){
+			return "";
+		}
+		if (str.length() <= len){
+			return str;
+		}
+		return str.substring(0, len);
+	}
+
+	/**
+	 * VB6,VBA互換
+	 * 文字列の末尾から指定した長さの文字列を取得する
+	 */
+	public static String right(String str, int len){
+		if (len < 0){
+			throw new IllegalArgumentException("引数'len'は0以上でなければなりません。");
+		}
+		if (str == null){
+			return "";
+		}
+		if (str.length() <= len){
+			return str;
+		}
+		return str.substring(str.length() - len);
+	}
+
 }
