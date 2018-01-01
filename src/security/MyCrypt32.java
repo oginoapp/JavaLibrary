@@ -5,6 +5,7 @@ import java.util.Random;
 
 import javax.xml.bind.DatatypeConverter;
 
+import interfaces.Encryptor;
 import math.XorShift32;
 
 /**
@@ -17,9 +18,9 @@ import math.XorShift32;
  * 20160803 - 新規作成
  * 20160901 - IVを含む暗号化、複合化
  */
-public class MyCrypt32 {
+public class MyCrypt32 implements Encryptor{
 	private int cipherKey;
-	private int iv;
+	private int encryptIv;
 	private int iv_min = Integer.parseInt("100000", 16);
 	private int iv_max = Integer.parseInt("FFFFFF", 16);
 	private Random rand = new Random();
@@ -39,15 +40,16 @@ public class MyCrypt32 {
 	 */
 	public MyCrypt32(int cipherKey, int iv){
 		this.cipherKey = cipherKey;
-		this.iv = iv;
+		this.encryptIv = iv;
 	}
 
 	/**
 	 * @機能概要：初期化ベクトルをセットする
 	 * @引数１：int型の値(乱数推奨)
 	 */
-	public void setIV(int iv){
-		this.iv = iv;
+	@Override
+	public <T> void setEncryptIv(T encryptIv) {
+		this.encryptIv = (int)encryptIv;
 	}
 
 	/**
@@ -55,7 +57,8 @@ public class MyCrypt32 {
 	 * @引数１：暗号化する文字列
 	 * @戻り値：暗号化された16進数文字列（IVを含む）
 	 */
-	public String encryptWithIV(String strData) throws UnsupportedEncodingException{
+	@Override
+	public String encryptWithIv(String strData){
 		int iv = rand.nextInt(iv_max - iv_min) + iv_min;
 		return Integer.toHexString(iv) + encrypt(strData, iv);
 	}
@@ -65,11 +68,17 @@ public class MyCrypt32 {
 	 * @引数１：暗号化する文字列
 	 * @戻り値：暗号化された16進数文字列
 	 */
-	public String encrypt(String strData) throws UnsupportedEncodingException{
-		return encrypt(strData, this.iv);
+	@Override
+	public String encrypt(String strData){
+		return encrypt(strData, this.encryptIv);
 	}
-	public String encrypt(String strData, int iv) throws UnsupportedEncodingException{
-		byte[] data = strData.getBytes("UTF-8");
+	public String encrypt(String strData, int iv){
+		byte[] data = null;
+		try{
+			data = strData.getBytes("UTF-8");
+		}catch(UnsupportedEncodingException e){
+			e.printStackTrace();
+		}
 		encrypt(data, iv);
 		return DatatypeConverter.printHexBinary(data);
 	}
@@ -78,8 +87,9 @@ public class MyCrypt32 {
 	 * @機能概要：バイト配列を暗号化する
 	 * @引数１：暗号化するバイト配列
 	 */
-	public void encrypt(byte[] data){
-		encrypt(data, this.iv);
+	public byte[] encrypt(byte[] data){
+		encrypt(data, this.encryptIv);
+		return data;
 	}
 	public void encrypt(byte[] data, int iv){
 		XorShift32 rand = new XorShift32(this.cipherKey, 3);
@@ -100,7 +110,8 @@ public class MyCrypt32 {
 	 * @引数１：暗号化された16進数文字列（IVを含む）
 	 * @戻り値：復号化された文字列
 	 */
-	public String decryptWithIV(String strData) throws UnsupportedEncodingException{
+	@Override
+	public String decryptWithIv(String strData){
 		int iv = Integer.parseInt(strData.substring(0, 6), 16);
 		strData = strData.substring(6, strData.length());
 		return decrypt(strData, iv);
@@ -111,21 +122,29 @@ public class MyCrypt32 {
 	 * @引数１：暗号化された16進数文字列
 	 * @戻り値：復号化された文字列
 	 */
-	public String decrypt(String strData) throws UnsupportedEncodingException{
-		return decrypt(strData, this.iv);
+	@Override
+	public String decrypt(String strData){
+		return decrypt(strData, this.encryptIv);
 	}
-	public String decrypt(String strData, int iv) throws UnsupportedEncodingException{
+	public String decrypt(String strData, int iv){
+		String result = null;
 		byte[] data = DatatypeConverter.parseHexBinary(strData);
 		decrypt(data, iv);
-		return new String(data, "UTF-8");
+		try{
+			result = new String(data, "UTF-8");
+		}catch(UnsupportedEncodingException e){
+			e.printStackTrace();
+		}
+		return result;
 	}
 
 	/**
 	 * @機能概要：バイト配列を復号化する
 	 * @引数１：復号化するバイト配列
 	 */
-	public void decrypt(byte[] data){
-		decrypt(data, this.iv);
+	public byte[] decrypt(byte[] data){
+		decrypt(data, this.encryptIv);
+		return data;
 	}
 	public void decrypt(byte[] data, int iv){
 		XorShift32 rand = new XorShift32(this.cipherKey, 3);

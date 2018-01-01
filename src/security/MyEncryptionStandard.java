@@ -6,6 +6,7 @@ import java.util.Random;
 
 import javax.xml.bind.DatatypeConverter;
 
+import interfaces.Encryptor;
 import math.XorShiftVariable;
 
 /**
@@ -16,9 +17,9 @@ import math.XorShiftVariable;
  * @see CBCモードで暗号化する
  * @see 依存クラス: XorShiftVariable
  */
-public class MyEncryptionStandard{
+public class MyEncryptionStandard implements Encryptor{
 	private int[] keyTokens = null;
-	private int iv = -1;
+	private int encryptIv = -1;
 
 	private final int IV_MIN = Integer.parseInt("10000000", 16);
 	private final int IV_MAX = Integer.parseInt("7FFFFFFF", 16);
@@ -62,8 +63,9 @@ public class MyEncryptionStandard{
 	 * @機能概要：初期化ベクトルをセットする
 	 * @引数１：int型の値(乱数推奨)
 	 */
-	public void setIV(int iv){
-		this.iv = iv;
+	@Override
+	public <T> void setEncryptIv(T encryptIv) {
+		this.encryptIv = (int)encryptIv;
 	}
 
 	/**
@@ -71,7 +73,8 @@ public class MyEncryptionStandard{
 	 * @引数１：暗号化する文字列
 	 * @戻り値：暗号化された16進数文字列（IVを含む）
 	 */
-	public String encryptWithIV(String strData){
+	@Override
+	public String encryptWithIv(String strData){
 		int iv = rand.nextInt(IV_MAX - IV_MIN) + IV_MIN;
 		return (Integer.toHexString(iv) + encrypt(strData, iv)).toUpperCase();
 	}
@@ -81,8 +84,9 @@ public class MyEncryptionStandard{
 	 * @引数１：暗号化する文字列
 	 * @戻り値：暗号化された16進数文字列
 	 */
+	@Override
 	public String encrypt(String strData){
-		return encrypt(strData, this.iv);
+		return encrypt(strData, this.encryptIv);
 	}
 	public String encrypt(String strData, int iv){
 		byte[] data = strData.getBytes(StandardCharsets.UTF_8);
@@ -94,8 +98,9 @@ public class MyEncryptionStandard{
 	 * @機能概要：バイト配列を暗号化する
 	 * @引数１：暗号化するバイト配列
 	 */
-	public void encrypt(byte[] data){
-		encrypt(data, this.iv);
+	public byte[] encrypt(byte[] data){
+		encrypt(data, this.encryptIv);
+		return data;
 	}
 	public void encrypt(byte[] data, int iv){
 		XorShiftVariable rand = new XorShiftVariable(this.keyTokens);
@@ -116,7 +121,8 @@ public class MyEncryptionStandard{
 	 * @引数１：暗号化された16進数文字列（IVを含む）
 	 * @戻り値：復号化された文字列
 	 */
-	public String decryptWithIV(String strData){
+	@Override
+	public String decryptWithIv(String strData){
 		int iv = Integer.parseInt(strData.substring(0, IV_LEN), 16);
 		strData = strData.substring(IV_LEN, strData.length());
 		return decrypt(strData, iv);
@@ -127,8 +133,9 @@ public class MyEncryptionStandard{
 	 * @引数１：暗号化された16進数文字列
 	 * @戻り値：復号化された文字列
 	 */
+	@Override
 	public String decrypt(String strData){
-		return decrypt(strData, this.iv);
+		return decrypt(strData, this.encryptIv);
 	}
 	public String decrypt(String strData, int iv){
 		byte[] data = DatatypeConverter.parseHexBinary(strData);
@@ -140,8 +147,9 @@ public class MyEncryptionStandard{
 	 * @機能概要：バイト配列を復号化する
 	 * @引数１：復号化するバイト配列
 	 */
-	public void decrypt(byte[] data){
-		decrypt(data, this.iv);
+	public byte[] decrypt(byte[] data){
+		decrypt(data, this.encryptIv);
+		return data;
 	}
 	public void decrypt(byte[] data, int iv){
 		XorShiftVariable rand = new XorShiftVariable(this.keyTokens);
