@@ -23,6 +23,7 @@ public class ArrayUtility{
 	/**
 	 * @機能概要：配列の要素数を1つ増やす
 	 * @引数１：配列
+	 * @戻り値：要素数を増やした配列
 	 */
 	public static <T> T[] expansion(T[] arr){
 		return expansion(arr, 1);
@@ -32,6 +33,7 @@ public class ArrayUtility{
 	 * @機能概要：配列の要素数を増やす
 	 * @引数１：配列
 	 * @引数２：増やす要素数
+	 * @戻り値：要素数を増やした配列
 	 */
 	public static <T> T[] expansion(T[] arr, int increment){
 		@SuppressWarnings("unchecked")
