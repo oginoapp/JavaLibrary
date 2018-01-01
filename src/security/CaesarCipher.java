@@ -9,7 +9,7 @@ import math.XorShift32;
  * @更新履歴：20160713 - 新規作成
  *            20160730 - 暗号キー変更メソッドの追加
  */
-public class CaesarCipher {
+public class CaesarCipher{
 	private int cipherKey;
 
 	/**
