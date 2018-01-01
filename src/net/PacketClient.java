@@ -2,6 +2,8 @@ package net;
 
 import java.net.Socket;
 
+import interfaces.Encryptor;
+
 /**
  * @使用方法:PacketClient cl = new PacketClient{}.start();
  *           cl.sendData("test");
@@ -13,7 +15,7 @@ public abstract class PacketClient extends Thread{
 	private String svhost;		//リモートホスト
 	private int svport;			//リモートポート
 	private String clientID;	//クライアントID
-	private int cipherKey;		//暗号キー
+	private Encryptor encryptor;		//暗号オブジェクト
 
 	private PacketSocket packetSock = null;	//ソケット
 
@@ -23,11 +25,11 @@ public abstract class PacketClient extends Thread{
 	 * @引数２：リモートポート
 	 * @引数３：クライアントID（クライアント同士で重複しない任意値）
 	 */
-	public PacketClient(String svhost, int svport, String clientID, int cipherKey){
+	public PacketClient(String svhost, int svport, String clientID, Encryptor encryptor){
 		this.svhost = svhost;
 		this.svport = svport;
 		this.clientID = clientID;
-		this.cipherKey = cipherKey;
+		this.encryptor = encryptor;
 	}
 
 	/**
@@ -50,7 +52,7 @@ public abstract class PacketClient extends Thread{
 	@Override
 	final public void run(){
 		try{
-			packetSock = new PacketSocket(new Socket(svhost,svport), this.cipherKey);
+			packetSock = new PacketSocket(new Socket(svhost,svport), this.encryptor);
 			sendData(clientID);
 			onConnect();
 

@@ -8,6 +8,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import interfaces.Encryptor;
+
 /**
  * @使用方法:PacketServer sv = new PacketServer{}.start();
  *           sv.getSessionByID(sessionID).sendData("test");
@@ -19,16 +21,16 @@ public abstract class PacketServer extends Thread{
 
 	private static List<Session> sessionList = null;	//クライアント一覧
 	private ServerSocket svSock = null;					//ソケット
-	private int cipherKey;		//暗号キー
+	private Encryptor encryptor;		//暗号オブジェト
 
 	/**
 	 * @機能概要：コンストラクタ
 	 *           セッションリストの準備、サーバーソケットの生成
 	 * @引数１：バインドするサーバーのローカルポート
 	 */
-	public PacketServer(int serverPort, int cipherKey){
+	public PacketServer(int serverPort, Encryptor encryptor){
 		try{
-			this.cipherKey = cipherKey;
+			this.encryptor = encryptor;
 
 			sessionList = Collections.synchronizedList(new ArrayList<Session>());
 			svSock = new ServerSocket();
@@ -133,7 +135,7 @@ public abstract class PacketServer extends Thread{
 		 */
 		public Session(Socket sock){
 			this.sock = sock;
-			this.packetSock = new PacketSocket(sock, PacketServer.this.cipherKey);
+			this.packetSock = new PacketSocket(sock, PacketServer.this.encryptor);
 		}
 
 		/**
