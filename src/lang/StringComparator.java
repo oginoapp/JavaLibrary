@@ -1,10 +1,32 @@
 package lang;
 
+import java.util.Comparator;
+
+import util.ArrayUtility;
+
 /**
  * 文字列の比較を、与えられた辞書によって行うクラス
+ *
+ * //使い方
+ * ArrayList<String> list = new ArrayList<>();
+ * list.add("a");
+ * list.add("b");
+ * list.add("c");
+ * list.add("d");
+ * String[] ascendingArray = {"a", "d", "b", "c"};
+ * Collections.sort(list, new StringComparator(ascendingArray));
+ * System.out.println(list);
  */
-public class StringComparator{
+public class StringComparator implements Comparator<String>{
+
+	//辞書データ
 	private String[] ascendingArray = null;
+
+	/**
+	 * 引数なしコンストラクタ
+	 */
+	public StringComparator(){
+	}
 
 	/**
 	 * コンストラクタ
@@ -15,13 +37,21 @@ public class StringComparator{
 	}
 
 	/**
+	 * 辞書をセット
+	 * @param ascendingArray 昇順の配列
+	 */
+	public void setAscendingArray(String[] ascendingArray){
+		this.ascendingArray = ascendingArray;
+	}
+
+	/**
 	 * 与えられた辞書をもとにstr1とstr2を比較する
 	 * @param str1 文字列１
 	 * @param str2 辞書に登録された文字列
-	 * @return str1 > str2 の結果
+	 * @return str1 > str2 ⇒ 1, str1 < str2 ⇒ -1, str1 == str2 ⇒ 0
 	 */
-	public boolean greaterThan(String str1, String str2){
-		boolean result = false;
+	public int compareTo(String str1, String str2){
+		int result = 0;
 
 		if(str1 == null){
 			throw new NullPointerException("str1 == null");
@@ -51,8 +81,30 @@ public class StringComparator{
 		}
 
 		//比較
-		result = idx1 > idx2;
+		if(idx1 > idx2){
+			result = 1;
+		}else if(idx1 < idx2){
+			result = -1;
+		}
 
 		return result;
 	}
+
+	/**
+	 * Collections.sortの時に呼ばれるメソッド
+	 */
+	@Override
+	public int compare(String s1, String s2) {
+		int result = 0;
+
+		if(ArrayUtility.contains(ascendingArray, s1)
+		|| ArrayUtility.contains(ascendingArray, s2)){
+			result = this.compareTo(s1, s2);
+		}else{
+			result = s1.compareTo(s2);
+		}
+
+		return result;
+	}
+
 }
