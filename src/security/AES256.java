@@ -1,7 +1,7 @@
 package security;
 
 import java.io.UnsupportedEncodingException;
-import java.util.Random;
+import java.security.SecureRandom;
 
 import javax.crypto.Cipher;
 import javax.crypto.spec.IvParameterSpec;
@@ -26,7 +26,7 @@ public class AES256 implements Encryptor{
 	private String charset = "UTF-8";
 
 	//ランダムエンジン
-	private Random random = new Random();
+	private SecureRandom random = new SecureRandom();
 
 	//定数
 	public static final int MAX_KEY_LENGTH = 16;

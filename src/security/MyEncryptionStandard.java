@@ -2,7 +2,7 @@ package security;
 
 
 import java.nio.charset.StandardCharsets;
-import java.util.Random;
+import java.security.SecureRandom;
 
 import javax.xml.bind.DatatypeConverter;
 
@@ -25,7 +25,7 @@ public class MyEncryptionStandard implements Encryptor{
 	private final int IV_MAX = Integer.parseInt("7FFFFFFF", 16);
 	private final int IV_LEN = 8;
 
-	private Random rand = new Random();
+	private SecureRandom rand = new SecureRandom();
 
 	/**
 	 * @機能概要：コンストラクタ

@@ -1,7 +1,7 @@
 package security;
 
 import java.io.UnsupportedEncodingException;
-import java.util.Random;
+import java.security.SecureRandom;
 
 import javax.xml.bind.DatatypeConverter;
 
@@ -23,7 +23,7 @@ public class MyCrypt32 implements Encryptor{
 	private int encryptIv;
 	private int iv_min = Integer.parseInt("100000", 16);
 	private int iv_max = Integer.parseInt("FFFFFF", 16);
-	private Random rand = new Random();
+	private SecureRandom rand = new SecureRandom();
 
 	/**
 	 * @機能概要：コンストラクタ
