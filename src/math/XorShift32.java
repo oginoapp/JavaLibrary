@@ -1,10 +1,12 @@
 package math;
 
+import interfaces.RandomIntGenerator;
+
 /**
  * @クラス説明：疑似乱数を生成する
  * @使い方：XorShift x = new XorShift(12345678, 3);
  */
-public class XorShift32{
+public class XorShift32 implements RandomIntGenerator{
 	private int seed = 0;
 	private int increment = 0;
 	private static final int max_seed = Integer.MAX_VALUE;
@@ -24,7 +26,8 @@ public class XorShift32{
 	 * @引数１：最大値
 	 * @戻り値：0から指定した最大値までの疑似乱数
 	 */
-	public int nextInt(int max){
+	@Override
+	public synchronized int nextInt(int max){
 		if(max_seed - this.seed > this.increment){
 			this.seed += this.increment;
 		}else{

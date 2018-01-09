@@ -3,19 +3,21 @@ package math;
 
 import java.util.Random;
 
+import interfaces.RandomIntGenerator;
+
 /**
  * @version 20161230
  * @author ogino
- * @see 疑似乱数をXorShiftによって生成し、同じseed値を与えられた場合に同じ乱数列を生成する
- * @see seed値を32bit整数の任意の長さの配列で渡す
- * @see seed値を渡さない場合、ランダムな128bitのseed値が生成される
+ * 疑似乱数をXorShiftによって生成し、同じseed値を与えられた場合に同じ乱数列を生成する
+ * seed値を32bit整数の任意の長さの配列で渡す
+ * seed値を渡さない場合、ランダムな128bitのseed値が生成される
  */
-public class XorShiftVariable{
+public class XorShiftVariable implements RandomIntGenerator{
 	private int[] seed = null;
 
 	/**
-	 * @see 引数なしコンストラクタ
-	 * @see seed値に乱数が設定され、生成する疑似乱数は128ビット周期になる
+	 * 引数なしコンストラクタ
+	 * seed値に乱数が設定され、生成する疑似乱数は128ビット周期になる
 	 */
 	public XorShiftVariable(){
 	    Random rand = new Random();
@@ -27,7 +29,7 @@ public class XorShiftVariable{
 	}
 
 	/**
-	 * @see コンストラクタ
+	 * コンストラクタ
 	 * @param シード値配列
 	 */
 	public XorShiftVariable(int[] seed){
@@ -35,10 +37,11 @@ public class XorShiftVariable{
 	}
 
 	/**
-	 * @see 0から最大値までの疑似乱数生成
+	 * 0から最大値までの疑似乱数生成
 	 * @param max 最大値
-	 * @return 生成された乱数：int
+	 * @return 生成された乱数
 	 */
+	@Override
 	public synchronized int nextInt(int max){
 		int result = 0;
 

@@ -2,20 +2,22 @@ package math;
 
 import java.util.Random;
 
+import interfaces.RandomIntGenerator;
+
 /**
- * @see 128bitのXorShiftによる疑似乱数の生成クラス
+ * 128bitのXorShiftによる疑似乱数の生成クラス
  * @author ogino
  * @version 20161230
  */
-public class XorShift128{
+public class XorShift128 implements RandomIntGenerator{
     private int x = -1;
     private int y = -1;
     private int z = -1;
     private int w = -1;
 
 	/**
-	 * @see 引数なしコンストラクタ
-	 * @see seed値に乱数が設定される
+	 * 引数なしコンストラクタ
+	 * seed値に乱数が設定される
 	 */
 	public XorShift128(){
 	    Random rand = new Random();
@@ -26,7 +28,7 @@ public class XorShift128{
 	}
 
 	/**
-	 * @see コンストラクタ
+	 * コンストラクタ
 	 * @param シード値1
 	 * @param シード値2
 	 * @param シード値3
@@ -40,10 +42,11 @@ public class XorShift128{
 	}
 
 	/**
-	 * @see 0から最大値までの疑似乱数生成
+	 * 0から最大値までの疑似乱数生成
 	 * @param max 最大値
-	 * @return 生成された乱数：int
+	 * @return 生成された乱数
 	 */
+	@Override
 	public synchronized int nextInt(int max){
 		int t = x ^ (x << 11);
 
