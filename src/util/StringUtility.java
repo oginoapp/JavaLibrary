@@ -1,8 +1,5 @@
 package util;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 public class StringUtility{
 
 	/**
@@ -120,13 +117,6 @@ public class StringUtility{
 			return str;
 		}
 		return str.substring(str.length() - len);
-	}
-
-	public void test(){
-		Matcher m = Pattern.compile(".{1,8}").matcher("UMR、は\r\nい!!\r\nUMR、はい!!UMAじゃない\n\n\nようまる");
-		while (m.find()) {
-		    System.out.println(m.group());
-		}
 	}
 
 	/**
