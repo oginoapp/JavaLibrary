@@ -1,6 +1,7 @@
 package util;
 
 import java.lang.reflect.Array;
+import java.util.Arrays;
 
 public class ArrayUtility{
 
@@ -59,9 +60,27 @@ public class ArrayUtility{
 	 */
 	public static <T> T[] expansion(T[] arr, int increment){
 		@SuppressWarnings("unchecked")
-		T[] result = (T[])Array.newInstance(arr.getClass().getComponentType(), arr.length + increment);;
+		T[] result = (T[])Array.newInstance(arr.getClass().getComponentType(), arr.length + increment);
 
 		System.arraycopy(arr, 0, result, 0, arr.length);
+
+		return result;
+	}
+
+	/**
+	 * 配列を等分に分割
+	 * @param arr 配列
+	 * @param chunkSize 固まりのサイズ
+	 * @return 分割された2次元配列
+	 */
+	public static <T> T[][] divideArray(T[] arr, int chunkSize){
+		int len = (int)Math.ceil(arr.length / (double)chunkSize);
+		@SuppressWarnings("unchecked")
+		T[][] result = (T[][])Array.newInstance(arr.getClass().getComponentType(), len, chunkSize);
+
+		for(int i = 0, start = 0; i < result.length; i++, start += chunkSize) {
+			result[i] = Arrays.copyOfRange(arr, start, start + chunkSize);
+		}
 
 		return result;
 	}

@@ -1,9 +1,7 @@
 package lang;
 
 /**
- * @version 20170109
- * @author ogino
- * @see 62進数を扱うクラス
+ * 62進数を扱うクラス
  */
 public class Decimal62{
 
@@ -18,8 +16,8 @@ public class Decimal62{
 	};
 
 	/**
-	 * @see long型数値⇒62進数文字列
-	 * @param num: long型数値
+	 * long型数値⇒62進数文字列
+	 * @param num long型数値
 	 */
 	public String encode(long num){
 		String decimal62 = "";
@@ -39,8 +37,8 @@ public class Decimal62{
 	}
 
 	/**
-	 * @see 62進数文字列⇒long型数値
-	 * @param decimal62: 62進数文字列
+	 * 62進数文字列⇒long型数値
+	 * @param decimal62 62進数文字列
 	 */
 	public long decode(String decimal62){
 		long result = 0;
