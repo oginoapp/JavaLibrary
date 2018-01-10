@@ -1,5 +1,8 @@
 package util;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 public class StringUtility{
 
 	/**
@@ -54,7 +57,7 @@ public class StringUtility{
 			len--;
 		}
 
-		return ((st>0) || (len<value.length)) ? str.substring(st,len) : str;
+		return ((st > 0) || (len < value.length)) ? str.substring(st, len) : str;
 	}
 
 	/**
@@ -117,6 +120,33 @@ public class StringUtility{
 			return str;
 		}
 		return str.substring(str.length() - len);
+	}
+
+	public void test(){
+		Matcher m = Pattern.compile(".{1,8}").matcher("UMR、は\r\nい!!\r\nUMR、はい!!UMAじゃない\n\n\nようまる");
+		while (m.find()) {
+		    System.out.println(m.group());
+		}
+	}
+
+	/**
+	 * 文字列を等分に分割
+	 * @param str 文字列
+	 * @param chunkSize 何文字ごとに分割するか
+	 * @return 分割された文字列の配列
+	 */
+	public static String[] divideString(String str, int chunkSize){
+		int strLen = str.length();
+		String[] result = new String[(int)Math.ceil(strLen / (double)chunkSize)];
+
+		for(int i = 0, sliceLen = 0, cnt = 0; i < strLen; i += chunkSize, cnt++){
+			sliceLen = strLen - i;
+			sliceLen = sliceLen > chunkSize ? chunkSize : sliceLen;
+
+			result[cnt] = str.substring(i, i + sliceLen);
+		}
+
+		return result;
 	}
 
 }
