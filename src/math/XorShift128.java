@@ -2,14 +2,14 @@ package math;
 
 import java.util.Random;
 
-import interfaces.RandomIntGenerator;
+import interfaces.IntPRNG;
 
 /**
  * 128bitのXorShiftによる疑似乱数の生成クラス
  * @author ogino
  * @version 20161230
  */
-public class XorShift128 implements RandomIntGenerator{
+public class XorShift128 implements IntPRNG{
     private int x = -1;
     private int y = -1;
     private int z = -1;

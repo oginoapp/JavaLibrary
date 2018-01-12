@@ -1,6 +1,6 @@
 package interfaces;
 
-public interface RandomIntGenerator{
+public interface IntPRNG{
 
 	/**
 	 * 0から指定した最大値までの疑似乱数生成

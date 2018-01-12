@@ -1,12 +1,12 @@
 package math;
 
-import interfaces.RandomIntGenerator;
+import interfaces.IntPRNG;
 
 /**
  * @クラス説明：疑似乱数を生成する
  * @使い方：XorShift x = new XorShift(12345678, 3);
  */
-public class XorShift32 implements RandomIntGenerator{
+public class XorShift32 implements IntPRNG{
 	private int seed = 0;
 	private int increment = 0;
 	private static final int max_seed = Integer.MAX_VALUE;

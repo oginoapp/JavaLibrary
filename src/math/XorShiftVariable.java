@@ -3,7 +3,7 @@ package math;
 
 import java.util.Random;
 
-import interfaces.RandomIntGenerator;
+import interfaces.IntPRNG;
 
 /**
  * @version 20161230
@@ -12,7 +12,7 @@ import interfaces.RandomIntGenerator;
  * seed値を32bit整数の任意の長さの配列で渡す
  * seed値を渡さない場合、ランダムな128bitのseed値が生成される
  */
-public class XorShiftVariable implements RandomIntGenerator{
+public class XorShiftVariable implements IntPRNG{
 	private int[] seed = null;
 
 	/**
