@@ -1,6 +1,7 @@
 package security;
 
 
+import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.security.SecureRandom;
 
@@ -10,16 +11,15 @@ import interfaces.Encryptor;
 import math.XorShiftVariable;
 
 /**
- * @version 20161230
- * @author ogino
- * @see 自分専用の標準暗号化アルゴリズム
- * @see 16進数の任意の長さの暗号キーを使い
- * @see CBCモードで暗号化する
+ * 自分専用の標準暗号化アルゴリズム
+ * 16進数の任意の長さの暗号キーを使い
+ * CBCモードで暗号化する
  * @see 依存クラス: XorShiftVariable
  */
 public class MyEncryptionStandard implements Encryptor{
 	private int[] keyTokens = null;
 	private int encryptIv = -1;
+	private Charset charset = StandardCharsets.UTF_8;
 
 	private final int IV_MIN = Integer.parseInt("10000000", 16);
 	private final int IV_MAX = Integer.parseInt("7FFFFFFF", 16);
@@ -52,11 +52,19 @@ public class MyEncryptionStandard implements Encryptor{
 	}
 
 	/**
-	 * @see コンストラクタ
+	 * コンストラクタ
      * @param 暗号キー(32ビット整数の配列)
 	 */
 	public MyEncryptionStandard(int[] keyTokens){
 		this.keyTokens = keyTokens.clone();
+	}
+
+	/**
+	 * 文字コードの設定
+	 * @param charset 文字コード
+	 */
+	public void setCharset(Charset charset){
+		this.charset = charset;
 	}
 
 	/**
@@ -89,7 +97,7 @@ public class MyEncryptionStandard implements Encryptor{
 		return encrypt(strData, this.encryptIv);
 	}
 	public String encrypt(String strData, int iv){
-		byte[] data = strData.getBytes(StandardCharsets.UTF_8);
+		byte[] data = strData.getBytes(charset);
 		encrypt(data, iv);
 		return (DatatypeConverter.printHexBinary(data)).toUpperCase();
 	}
