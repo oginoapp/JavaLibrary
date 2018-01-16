@@ -1,14 +1,27 @@
 package util;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Locale;
 
 public class DateUtility{
 
+	public static enum DateDiffType{
+	    DATE,
+	    HOUR,
+	    MINUTE,
+	    SECOND,
+	    MILLI_SECOND;
+	}
+
 	/**
-	 * @機能概要：曜日計算
-	 * @引数１：日付の文字列
-	 * @引数２：年月日のセパレータ
+	 * 曜日計算
+	 * @param date 日付の文字列
+	 * @param separator 年月日のセパレータ
+	 *
+	 * @deprecated weekOfDay(Date date)メソッドを推奨
 	 */
 	public static String weekOfDay(String date, String separator){
 		String weekOfDay = null;
@@ -41,9 +54,34 @@ public class DateUtility{
 	}
 
 	/**
+	 * 日付から曜日を求める
+	 * @param date 日付のオブジェクト
+	 * @return 曜日の値
+	 * SUNDAY = 1    //日曜日
+	 * MONDAY = 2    //月曜日
+	 * TUESDAY = 3   //火曜日
+	 * WEDNESDAY = 4 //水曜日
+	 * THURSDAY = 5  //木曜日
+	 * FRIDAY = 6    //金曜日
+	 * SATURDAY = 7  //土曜日
+	 */
+	public static int weekOfDay(Date date){
+		int dayOfWeek = 0;
+
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(date);
+
+		dayOfWeek = cal.get(Calendar.DAY_OF_WEEK);
+
+		return dayOfWeek;
+	}
+
+	/**
 	 * @機能概要：文字列をyyyy-mm-ddの形式にする
 	 * @引数１：変換する文字列
 	 * @戻り値：変換された文字列
+	 *
+	 * @deprecated reFormatメソッドを推奨
 	 */
 	public static String toDateString(String strDate){
 		if(strDate == null){
@@ -65,6 +103,66 @@ public class DateUtility{
 		}
 
 		return datetime.toString();
+	}
+
+	/**
+	 * 日付のフォーマットを変更
+	 * yyyyMMddでフォーマットされている文字列を指定したフォーマットに変換
+	 * @param strDate 日付の文字列
+	 * @param afterFormat 変更後のフォーマット
+	 * @return フォーマットが変更された日付の文字列
+	 *
+	 * @throws ParseException 解析中の想定外のエラー
+	 */
+	public static String reFormat(String strDate, String afterFormat) throws ParseException{
+		return reFormat(strDate, "yyyyMMdd", afterFormat);
+	}
+
+	/**
+	 * 日付のフォーマットを変更
+	 * @param strDate 日付の文字列
+	 * @param beforeFormat 変更前のフォーマット
+	 * @param afterFormat 変更後のフォーマット
+	 * @return フォーマットが変更された日付の文字列
+	 *
+	 * @throws ParseException 解析中の想定外のエラー
+	 */
+	public static String reFormat(String strDate, String beforeFormat, String afterFormat) throws ParseException{
+		String result = "";
+
+		Date date = new SimpleDateFormat(beforeFormat).parse(strDate);
+		result = new SimpleDateFormat(afterFormat).format(date);
+
+		return result;
+	}
+
+	/**
+	 * dateTo - dateFrom の日付の差分を返す
+	 *
+	 * @param dateFrom 比較対象の日付
+	 * @param dateTo 比較対象の日付
+	 * @param type 日付の種類
+	 * @return 指定した日付の種類に応じた差分
+	 */
+	public static double dateDiff(Date dateFrom, Date dateTo, DateDiffType type){
+		double diff = dateTo.getTime() - dateFrom.getTime();
+
+		switch(type){
+		case DATE:
+			diff /= 24D;
+		case HOUR:
+			diff /= 60D;
+		case MINUTE:
+			diff /= 60D;
+		case SECOND:
+			diff /= 1000D;
+		case MILLI_SECOND:
+			break;
+		default:
+			throw new IllegalArgumentException("DateDiffTypeが間違っています。");
+		}
+
+		return diff;
 	}
 
 }
