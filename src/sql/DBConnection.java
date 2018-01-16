@@ -5,17 +5,15 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 /**
- * @version 20170413
- * @author ogino
- * @see DBとの接続を取得するクラス（シングルトン実装）
+ * DBとの接続を取得するクラス（シングルトン実装）
  */
-public class DBConnection {
+public class DBConnection{
 	private static Connection conn = null;
 	private static long lastConnectTime = 0;
 	private static long reConnectInterval = 1000 * 60 * 60 * 1;
 	private static ConnectionInfo info = null;
 
-	public class ConnectionInfo {
+	public static class ConnectionInfo{
 		public String host = "localhost";
 		public int port = 3306;
 		public String database = null;
@@ -27,16 +25,16 @@ public class DBConnection {
 	private DBConnection(){}
 
 	/**
-	 * @see DBの接続情報を設定する
-	 * @param DBの接続情報
+	 * DBの接続情報を設定する
+	 * @param info DBの接続情報
 	 */
 	public static void setConnectionInfo(ConnectionInfo info){
 		DBConnection.info = info;
 	}
 
 	/**
-	 * @see DBとの接続を取得する
-	 * @param 既存の接続オブジェクトに上書きするかどうか
+	 * DBとの接続を取得する
+	 * @param newConnection 既存の接続オブジェクトに上書きするかどうか
 	 * @return 接続オブジェクト
 	 * @throws SQLException
 	 * @throws ClassNotFoundException
@@ -66,7 +64,7 @@ public class DBConnection {
 	}
 
 	/**
-	 * @see DBとの接続を閉じる
+	 * DBとの接続を閉じる
 	 * @throws SQLException
 	 */
 	public static void close() throws SQLException{
