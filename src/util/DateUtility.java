@@ -9,7 +9,7 @@ import java.util.Locale;
 public class DateUtility{
 
 	public static enum DateDiffType{
-	    DATE,
+		DAY,
 	    HOUR,
 	    MINUTE,
 	    SECOND,
@@ -148,7 +148,7 @@ public class DateUtility{
 		double diff = dateTo.getTime() - dateFrom.getTime();
 
 		switch(type){
-		case DATE:
+		case DAY:
 			diff /= 24D;
 		case HOUR:
 			diff /= 60D;
