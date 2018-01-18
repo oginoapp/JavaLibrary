@@ -3,7 +3,25 @@ package util;
 public class StringUtility{
 
 	/**
-	 * @see 配列の文字列データを1つの文字列に結合
+	 * 文字列の数値判定
+	 * @param str 文字列
+	 * @return 数値かどうか
+	 */
+	public static boolean isNumeric(String str){
+		boolean result = false;
+
+		try{
+			if(str != null){
+				Double.parseDouble(str);
+				result = true;
+			}
+		}catch(NumberFormatException ex){}
+
+		return result;
+	}
+
+	/**
+	 * 配列の文字列データを1つの文字列に結合
 	 * @param arr 結合したい配列
 	 * @param separator セパレータ
 	 */
