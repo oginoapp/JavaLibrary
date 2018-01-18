@@ -8,12 +8,15 @@ import java.util.Locale;
 
 public class DateUtility{
 
+	/**
+	 * 日付の差分の種類を指定する列挙型
+	 */
 	public static enum DateDiffType{
 		DAY,
-	    HOUR,
-	    MINUTE,
-	    SECOND,
-	    MILLI_SECOND;
+		HOUR,
+		MINUTE,
+		SECOND,
+		MILLI_SECOND;
 	}
 
 	/**
@@ -143,8 +146,10 @@ public class DateUtility{
 	 * @param dateTo 比較対象の日付
 	 * @param type 日付の種類
 	 * @return 指定した日付の種類に応じた差分
+	 *
+	 * @throws IllegalArgumentException DateDiffTypeの指定が間違っている
 	 */
-	public static double dateDiff(Date dateFrom, Date dateTo, DateDiffType type){
+	public static double dateDiff(Date dateFrom, Date dateTo, DateDiffType type) throws IllegalArgumentException{
 		double diff = dateTo.getTime() - dateFrom.getTime();
 
 		switch(type){
