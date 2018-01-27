@@ -11,7 +11,7 @@ public class DateUtility{
 	/**
 	 * 日付の差分の種類を指定する列挙型
 	 */
-	public static enum DateDiffType{
+	public static enum TimeDiffType{
 		DAY,
 		HOUR,
 		MINUTE,
@@ -149,7 +149,7 @@ public class DateUtility{
 	 *
 	 * @throws IllegalArgumentException DateDiffTypeの指定が間違っている
 	 */
-	public static double dateDiff(Date dateFrom, Date dateTo, DateDiffType type) throws IllegalArgumentException{
+	public static double dateDiff(Date dateFrom, Date dateTo, TimeDiffType type) throws IllegalArgumentException{
 		double diff = dateTo.getTime() - dateFrom.getTime();
 
 		switch(type){
