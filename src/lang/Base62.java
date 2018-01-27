@@ -1,11 +1,11 @@
 package lang;
 
 /**
- * 62進数を扱うクラス
+ * 62進数の変換を行うクラス
  */
-public class Decimal62{
+public class Base62{
 
-	public final char[] chars62 = new char[]{
+	private static final char[] chars62 = new char[]{
 		'0','1','2','3','4','5','6','7','8','9',
 		'a','b','c','d','e','f','g','h','i','j',
 		'k','l','m','n','o','p','q','r','s','t',
@@ -19,8 +19,8 @@ public class Decimal62{
 	 * long型数値⇒62進数文字列
 	 * @param num long型数値
 	 */
-	public String encode(long num){
-		String decimal62 = "";
+	public static String encodeLong(long num){
+		StringBuilder base62 = new StringBuilder();
 
 		long tmp = num;
 		long mod = 0;
@@ -28,19 +28,19 @@ public class Decimal62{
 			mod = tmp % 62;
 			tmp = tmp / 62;
 
-			decimal62 = chars62[(int)mod] + decimal62;
+			base62 = base62.insert(0, chars62[(int)mod]);
 		}
 		mod = tmp % 62;
-		decimal62 = chars62[(int)mod] + decimal62;
+		base62 = base62.insert(0, chars62[(int)mod]);
 
-		return decimal62;
+		return base62.toString();
 	}
 
 	/**
 	 * 62進数文字列⇒long型数値
 	 * @param decimal62 62進数文字列
 	 */
-	public long decode(String decimal62){
+	public static long decodeToLong(String decimal62){
 		long result = 0;
 
 		char[] chars = decimal62.toCharArray();
@@ -58,4 +58,5 @@ public class Decimal62{
 
 		return result;
 	}
+
 }
