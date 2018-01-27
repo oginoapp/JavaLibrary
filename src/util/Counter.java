@@ -10,14 +10,15 @@ public abstract class Counter extends Thread{
 	/* カウント回数の無限指定（-1以下の定数のみ代入可） */
 	public static final int INFINITY = -1;// <= -1
 
-	private int max;
-	private int interval;
+	private long max;
+	private long interval;
 	private boolean countDown;
 	private boolean err_flg;
 	private boolean loop;
 	private boolean count_infinity;
 	private boolean wait;
-	private int count;
+	private long count;
+	private StopWatch sw;
 
 	/* コンストラクタ */
 	public Counter(){
@@ -25,17 +26,17 @@ public abstract class Counter extends Thread{
 	}
 
 	/* コンストラクタ */
-	public Counter(int max){
+	public Counter(long max){
 		initialize(max, 1000, true);
 	}
 
 	/* コンストラクタ */
-	public Counter(int max, int interval){
+	public Counter(long max, long interval){
 		initialize(max, interval, true);
 	}
 
 	/* コンストラクタ */
-	public Counter(int max, int interval, boolean countDown){
+	public Counter(long max, long interval, boolean countDown){
 		initialize(max, interval, countDown);
 	}
 
@@ -45,7 +46,7 @@ public abstract class Counter extends Thread{
 	 * 引数２：クロック間隔（ミリ秒）
 	 * 引数３：カウントダウンかどうか
 	 */
-	public void initialize(int max, int interval, boolean countDown){
+	public void initialize(long max, long interval, boolean countDown){
 		this.max = max;
 		this.interval = interval;
 		this.countDown = countDown;
@@ -54,6 +55,7 @@ public abstract class Counter extends Thread{
 		this.loop = true;
 		this.count_infinity = (max == Counter.INFINITY ? true : false);
 		this.wait = false;
+		this.sw = new StopWatch();
 	}
 
 	/**
@@ -84,8 +86,13 @@ public abstract class Counter extends Thread{
 		onStart();
 		clock: while(loop){
 			try{
+				sw.start();
 				onCount(count);
-				Thread.sleep(interval);
+				sw.stop();
+
+				//オーバーヘッド計算
+				long sleep = interval - sw.getElapsedMillis();
+				Thread.sleep(sleep >= 0 ? sleep : 0);
 
 				//待機処理
 				while(wait){
@@ -131,7 +138,7 @@ public abstract class Counter extends Thread{
 	 * 機能概要：クロックするたびに毎回呼ばれるリスナーメソッド
 	 * 引数１：カウントアップ=現在のクロック回数、カウントダウン=残りクロック回数
 	 */
-	protected abstract void onCount(int count);
+	protected abstract void onCount(long count);
 
 	/**
 	 * 機能概要：クロック終了時に呼ばれるリスナーメソッド
