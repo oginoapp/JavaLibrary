@@ -1,5 +1,7 @@
 package util;
 
+import java.util.regex.Pattern;
+
 public class StringUtility{
 
 	/**
@@ -18,6 +20,76 @@ public class StringUtility{
 		}catch(NumberFormatException ex){}
 
 		return result;
+	}
+
+	/**
+	 * 文字列の数値判定
+	 * @param str 文字列
+	 * @return 整数かどうか
+	 */
+	public static boolean isNumber(String str){
+		boolean result = false;
+
+		try{
+			if(str != null){
+				Long.parseLong(str);
+				result = true;
+			}
+		}catch(NumberFormatException ex){}
+
+		return result;
+	}
+
+	/**
+	 * Nullか空文字のチェック
+	 */
+	public static boolean isNullOrEmpty(String str) {
+		return str == null || str.isEmpty();
+	}
+
+	/**
+	 * 半角英数字だけかどうか
+	 */
+	public static boolean isHalfAlphaNumeric(String str) {
+		Pattern pattern = Pattern.compile("^[0-9a-zA-Z]*$");
+		return pattern.matcher(str).find();
+	}
+
+	/**
+	 * 半角カナだけかどうか
+	 * @param str チェックする文字列
+	 */
+	public static boolean isHankakuKana(String str) {
+		char[] chars = str.toCharArray();
+		for (int i = 0; i < chars.length; i++) {
+			char c = chars[i];
+			//半角カナ以外
+			if (c < '\uff61' || c > '\uff9f') {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	/**
+	 * 全角文字だけかどうか
+	 * @param str チェックする文字列
+	 * @param allowHankakuKana 半角カナ全角文字として扱う
+	 */
+	public static boolean isZenkaku(String str, boolean allowHankakuKana) {
+		char[] chars = str.toCharArray();
+		for (int i = 0; i < chars.length; i++) {
+			char c = chars[i];
+			if ((c <= '\u007e') || // 英数字
+					(c == '\u00a5') || // \記号
+					(c == '\u203e') || // ~記号
+					(!allowHankakuKana &&
+							(c >= '\uff61' && c <= '\uff9f')) // 半角カナ
+			) {
+				return false;
+			}
+		}
+		return true;
 	}
 
 	/**
