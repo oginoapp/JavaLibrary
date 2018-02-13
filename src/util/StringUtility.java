@@ -48,18 +48,20 @@ public class StringUtility{
 	}
 
 	/**
-	 * 半角英数字だけかどうか
+	 * 半角英数字だけかどうか(nullの場合はtrue)
 	 */
 	public static boolean isHalfAlphaNumeric(String str) {
+		if(str == null) str = "";
 		Pattern pattern = Pattern.compile("^[0-9a-zA-Z]*$");
 		return pattern.matcher(str).find();
 	}
 
 	/**
-	 * 半角カナだけかどうか
+	 * 半角カナだけかどうか(nullの場合はtrue)
 	 * @param str チェックする文字列
 	 */
 	public static boolean isHankakuKana(String str) {
+		if(str == null) str = "";
 		char[] chars = str.toCharArray();
 		for (int i = 0; i < chars.length; i++) {
 			char c = chars[i];
@@ -72,11 +74,12 @@ public class StringUtility{
 	}
 
 	/**
-	 * 全角文字だけかどうか
+	 * 全角文字だけかどうか(nullの場合はtrue)
 	 * @param str チェックする文字列
 	 * @param allowHankakuKana 半角カナ全角文字として扱う
 	 */
 	public static boolean isZenkaku(String str, boolean allowHankakuKana) {
+		if(str == null) str = "";
 		char[] chars = str.toCharArray();
 		for (int i = 0; i < chars.length; i++) {
 			char c = chars[i];
