@@ -1,6 +1,7 @@
 package util;
 
 import java.text.ParseException;
+import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -168,6 +169,36 @@ public class DateUtility{
 		}
 
 		return diff;
+	}
+
+	/**
+	 * 日付をチェック
+	 * isValidDate("2018/2/1", "y/M/d")    true
+	 * isValidDate("2018/02/01", "y/M/d")  true
+	 * isValidDate("2018/2/1a", "y/M/d")   false
+	 * isValidDate("2018/2", "y/M/d")      false
+	 * isValidDate("2018/2/29", "y/M/d")   false
+	 * isValidDate("", "y/M/d")            false
+	 * isValidDate(null, "y/M/d")          false
+	 *
+	 * @param str 日付の文字列
+	 * @param format 日付のフォーマット
+	 * @return 有効な日付かどうか
+	 */
+	public static boolean isValidDate(String str, String format) {
+		if(str == null || format == null) return false;
+
+		SimpleDateFormat sdf = new SimpleDateFormat(format);
+		ParsePosition pos = new ParsePosition(0);
+
+		try {
+			sdf.setLenient(false);
+			sdf.parse(str, pos);
+			sdf.parse(str);
+			return str.length() == pos.getIndex();
+		} catch(ParseException ex) {
+			return false;
+		}
 	}
 
 }
