@@ -16,18 +16,21 @@ import java.sql.SQLException;
  */
 public class DBConnection{
 
+	public static final String DRIVER_MYSQL = "com.mysql.jdbc.Driver";
+	public static final String DRIVER_ORACLE = "oracle.jdbc.driver.OracleDriver";
+
 	public static final String DEFAULT_CONNECTIONSTRING_MYSQL = "jdbc:mysql://localhost:3306/test"
 			+ "?useSSL=false"
 			+ "&requireSSL=false"
 			+ "&zeroDateTimeBehavior=convertToNull"
 			+ "&characterEncoding=utf8";
-
 	public static final String DEFAULT_CONNECTIONSTRING_ORACLE = "jdbc:oracle:thin:@localhost:1521:XE";
 
 	private static Connection conn = null;
 	private static ConnectionInfo info = null;
 
 	public static class ConnectionInfo {
+		public String driver = DRIVER_MYSQL;
 		public String connectionString = DEFAULT_CONNECTIONSTRING_MYSQL;
 		public String username = null;
 		public String password = null;
@@ -60,7 +63,7 @@ public class DBConnection{
 		}
 
 		if(conn == null || conn.isClosed()){
-			Class.forName("com.mysql.jdbc.Driver");
+			Class.forName(info.driver);
 			Connection conn = DriverManager.getConnection(
 					info.connectionString, info.username, info.password);
 			DBConnection.conn = conn;
