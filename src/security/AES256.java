@@ -9,7 +9,7 @@ import javax.crypto.spec.SecretKeySpec;
 
 import org.apache.commons.codec.binary.Base64;
 
-import interfaces.Encryptor;
+import interfaces.StringEncryptor;
 
 /**
  * AES256を使った暗号化、復号化を行う
@@ -20,7 +20,7 @@ import interfaces.Encryptor;
  * @see /Resources/commons-codec-1.10.jar
  * @see org.apache.commons.codec.binary.Base64
  */
-public class AES256 implements Encryptor{
+public class AES256 implements StringEncryptor{
 	private String encryptKey = "1234567890123456";
 	private String encryptIv = "abcdefghijklmnop";
 	private String charset = "UTF-8";

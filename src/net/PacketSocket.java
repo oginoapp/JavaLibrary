@@ -6,7 +6,7 @@ import java.io.IOException;
 import java.net.Socket;
 import java.util.Random;
 
-import interfaces.Encryptor;
+import interfaces.ByteArrayEncryptor;
 import security.CaesarCipher;
 
 /**
@@ -29,7 +29,7 @@ public class PacketSocket {
 	private Socket sock = null;
 	private BufferedInputStream sockin = null;
 	private BufferedOutputStream sockout = null;
-	private Encryptor enctyptor = null;
+	private ByteArrayEncryptor enctyptor = null;
 
 	private final Object sendLock = new Object();
 	private final Object reveiveLock = new Object();
@@ -40,7 +40,7 @@ public class PacketSocket {
 	 * @引数２：暗号化キー
 	 * @see CaesarCipher
 	 */
-	public PacketSocket(Socket sock, Encryptor enctyptor){
+	public PacketSocket(Socket sock, ByteArrayEncryptor enctyptor){
 		try{
 			this.sock = sock;
 			this.sockin = new BufferedInputStream(sock.getInputStream());
@@ -76,7 +76,7 @@ public class PacketSocket {
 			enctyptor.setEncryptIv(iv);
 
 			//暗号化
-			data = enctyptor.encrypt(data);
+			enctyptor.encrypt(data);
 
 			//チェックサム
 			int checksum = 0;
@@ -170,7 +170,7 @@ public class PacketSocket {
 
 			//文字列に変換して復号化
 			enctyptor.setEncryptIv(iv);
-			buf = enctyptor.decrypt(buf);
+			enctyptor.decrypt(buf);
 
 			return buf;
 		}

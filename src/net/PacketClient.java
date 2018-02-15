@@ -2,7 +2,7 @@ package net;
 
 import java.net.Socket;
 
-import interfaces.Encryptor;
+import interfaces.ByteArrayEncryptor;
 
 /**
  * @使用方法:PacketClient cl = new PacketClient{}.start();
@@ -15,7 +15,7 @@ public abstract class PacketClient extends Thread{
 	private String svhost;		//リモートホスト
 	private int svport;			//リモートポート
 	private String clientID;	//クライアントID
-	private Encryptor encryptor;		//暗号オブジェクト
+	private ByteArrayEncryptor encryptor;		//暗号オブジェクト
 
 	private PacketSocket packetSock = null;	//ソケット
 
@@ -25,7 +25,7 @@ public abstract class PacketClient extends Thread{
 	 * @引数２：リモートポート
 	 * @引数３：クライアントID（クライアント同士で重複しない任意値）
 	 */
-	public PacketClient(String svhost, int svport, String clientID, Encryptor encryptor){
+	public PacketClient(String svhost, int svport, String clientID, ByteArrayEncryptor encryptor){
 		this.svhost = svhost;
 		this.svport = svport;
 		this.clientID = clientID;

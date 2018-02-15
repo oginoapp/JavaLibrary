@@ -5,7 +5,8 @@ import java.security.SecureRandom;
 
 import javax.xml.bind.DatatypeConverter;
 
-import interfaces.Encryptor;
+import interfaces.ByteArrayEncryptor;
+import interfaces.StringEncryptor;
 import math.XorShift128;
 
 /**
@@ -13,7 +14,7 @@ import math.XorShift128;
  * @author ogino
  * @version 20161230
  */
-public class MyCrypt128 implements Encryptor{
+public class MyCrypt128 implements ByteArrayEncryptor, StringEncryptor{
 
 	private int keyToken1 = -1;
 	private int keyToken2 = -1;
@@ -113,9 +114,8 @@ public class MyCrypt128 implements Encryptor{
 	 * @機能概要：バイト配列を暗号化する
 	 * @引数１：暗号化するバイト配列
 	 */
-	public byte[] encrypt(byte[] data){
+	public void encrypt(byte[] data){
 		encrypt(data, this.encryptIv);
-		return data;
 	}
 	public void encrypt(byte[] data, int iv){
 		XorShift128 rand = new XorShift128(
@@ -166,9 +166,8 @@ public class MyCrypt128 implements Encryptor{
 	 * @機能概要：バイト配列を復号化する
 	 * @引数１：復号化するバイト配列
 	 */
-	public byte[] decrypt(byte[] data){
+	public void decrypt(byte[] data){
 		decrypt(data, this.encryptIv);
-		return data;
 	}
 	public void decrypt(byte[] data, int iv){
 		XorShift128 rand = new XorShift128(

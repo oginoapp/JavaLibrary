@@ -5,7 +5,8 @@ import java.security.SecureRandom;
 
 import javax.xml.bind.DatatypeConverter;
 
-import interfaces.Encryptor;
+import interfaces.ByteArrayEncryptor;
+import interfaces.StringEncryptor;
 import math.XorShift32;
 
 /**
@@ -18,7 +19,7 @@ import math.XorShift32;
  * 20160803 - 新規作成
  * 20160901 - IVを含む暗号化、複合化
  */
-public class MyCrypt32 implements Encryptor{
+public class MyCrypt32 implements ByteArrayEncryptor, StringEncryptor{
 	private int cipherKey;
 	private int encryptIv;
 	private int iv_min = Integer.parseInt("100000", 16);
@@ -87,9 +88,8 @@ public class MyCrypt32 implements Encryptor{
 	 * @機能概要：バイト配列を暗号化する
 	 * @引数１：暗号化するバイト配列
 	 */
-	public byte[] encrypt(byte[] data){
+	public void encrypt(byte[] data){
 		encrypt(data, this.encryptIv);
-		return data;
 	}
 	public void encrypt(byte[] data, int iv){
 		XorShift32 rand = new XorShift32(this.cipherKey, 3);
@@ -142,9 +142,8 @@ public class MyCrypt32 implements Encryptor{
 	 * @機能概要：バイト配列を復号化する
 	 * @引数１：復号化するバイト配列
 	 */
-	public byte[] decrypt(byte[] data){
+	public void decrypt(byte[] data){
 		decrypt(data, this.encryptIv);
-		return data;
 	}
 	public void decrypt(byte[] data, int iv){
 		XorShift32 rand = new XorShift32(this.cipherKey, 3);

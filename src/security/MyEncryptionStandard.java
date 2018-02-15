@@ -7,7 +7,8 @@ import java.security.SecureRandom;
 
 import javax.xml.bind.DatatypeConverter;
 
-import interfaces.Encryptor;
+import interfaces.ByteArrayEncryptor;
+import interfaces.StringEncryptor;
 import math.XorShiftVariable;
 
 /**
@@ -16,7 +17,7 @@ import math.XorShiftVariable;
  * CBCモードで暗号化する
  * @see 依存クラス: XorShiftVariable
  */
-public class MyEncryptionStandard implements Encryptor{
+public class MyEncryptionStandard implements ByteArrayEncryptor, StringEncryptor{
 	private int[] keyTokens = null;
 	private int encryptIv = -1;
 	private Charset charset = StandardCharsets.UTF_8;
@@ -106,9 +107,8 @@ public class MyEncryptionStandard implements Encryptor{
 	 * @機能概要：バイト配列を暗号化する
 	 * @引数１：暗号化するバイト配列
 	 */
-	public byte[] encrypt(byte[] data){
+	public void encrypt(byte[] data){
 		encrypt(data, this.encryptIv);
-		return data;
 	}
 	public void encrypt(byte[] data, int iv){
 		XorShiftVariable rand = new XorShiftVariable(this.keyTokens);
@@ -155,9 +155,8 @@ public class MyEncryptionStandard implements Encryptor{
 	 * @機能概要：バイト配列を復号化する
 	 * @引数１：復号化するバイト配列
 	 */
-	public byte[] decrypt(byte[] data){
+	public void decrypt(byte[] data){
 		decrypt(data, this.encryptIv);
-		return data;
 	}
 	public void decrypt(byte[] data, int iv){
 		XorShiftVariable rand = new XorShiftVariable(this.keyTokens);

@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import interfaces.Encryptor;
+import interfaces.ByteArrayEncryptor;
 
 /**
  * @使用方法:PacketServer sv = new PacketServer{}.start();
@@ -21,14 +21,14 @@ public abstract class PacketServer extends Thread{
 
 	private static List<Session> sessionList = null;	//クライアント一覧
 	private ServerSocket svSock = null;					//ソケット
-	private Encryptor encryptor;		//暗号オブジェト
+	private ByteArrayEncryptor encryptor;		//暗号オブジェト
 
 	/**
 	 * @機能概要：コンストラクタ
 	 *           セッションリストの準備、サーバーソケットの生成
 	 * @引数１：バインドするサーバーのローカルポート
 	 */
-	public PacketServer(int serverPort, Encryptor encryptor){
+	public PacketServer(int serverPort, ByteArrayEncryptor encryptor){
 		try{
 			this.encryptor = encryptor;
 
