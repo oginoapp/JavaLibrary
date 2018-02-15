@@ -5,7 +5,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 /**
- * DBとの接続を取得するクラス（シングルトン実装）
+ * DBとの接続を取得するクラス
  *
  * ConnectionInfo info = new ConnectionInfo();
  * info.connectionString = DBConnection.DEFAULT_CONNECTIONSTRING_MYSQL;
@@ -25,8 +25,6 @@ public class DBConnection{
 	public static final String DEFAULT_CONNECTIONSTRING_ORACLE = "jdbc:oracle:thin:@localhost:1521:XE";
 
 	private static Connection conn = null;
-	private static long lastConnectTime = 0;
-	private static long reConnectInterval = 1000 * 60 * 60 * 1;
 	private static ConnectionInfo info = null;
 
 	public static class ConnectionInfo {
@@ -57,16 +55,15 @@ public class DBConnection{
 		return getConnection(false);
 	}
 	public static Connection getConnection(boolean newConnection) throws SQLException, ClassNotFoundException {
-		if(System.currentTimeMillis() > lastConnectTime + reConnectInterval){
-			newConnection = true;
+		if(newConnection){
+			close();
 		}
 
-		if(conn == null || conn.isClosed() || newConnection){
+		if(conn == null || conn.isClosed()){
 			Class.forName("com.mysql.jdbc.Driver");
 			Connection conn = DriverManager.getConnection(
 					info.connectionString, info.username, info.password);
 			DBConnection.conn = conn;
-            lastConnectTime = System.currentTimeMillis();
 		}
 
 		return conn;
@@ -74,10 +71,11 @@ public class DBConnection{
 
 	/**
 	 * DBとの接続を明示的に閉じる
-	 * @throws SQLException
 	 */
-	public static void close() throws SQLException {
-		if(conn != null) conn.close();
+	public static void close() {
+		try {
+			if(conn != null) conn.close();
+		} catch (SQLException e) { }
 	}
 
 }
