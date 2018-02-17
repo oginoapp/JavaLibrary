@@ -35,7 +35,7 @@ public class CaesarCipher{
 	 */
 	public synchronized String encrypt(String str){
 		StringBuilder sb = new StringBuilder();
-		XorShift32 x = new XorShift32(cipherKey, 3);
+		XorShift32 x = new XorShift32(cipherKey);
 
 		for(int i=0; i<str.length(); i++){
 	         sb.append((char)(str.charAt(i) + x.nextInt(1000)));
@@ -51,7 +51,7 @@ public class CaesarCipher{
 	 */
 	public synchronized String decrypt(String str){
 		StringBuilder sb = new StringBuilder();
-		XorShift32 x = new XorShift32(cipherKey, 3);
+		XorShift32 x = new XorShift32(cipherKey);
 
 		for(int i=0; i<str.length(); i++){
 			sb.append((char)(str.charAt(i) - x.nextInt(1000)));

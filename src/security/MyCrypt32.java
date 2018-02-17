@@ -92,15 +92,16 @@ public class MyCrypt32 implements ByteArrayEncryptor, StringEncryptor{
 		encrypt(data, this.encryptIv);
 	}
 	public void encrypt(byte[] data, int iv){
-		XorShift32 rand = new XorShift32(this.cipherKey, 3);
-		for(int i=0; i<data.length; i++){
+		//XorShift32 rand = new XorShift32(this.cipherKey, 3);
+		XorShift32 rand = new XorShift32(this.cipherKey);
+		for(int i = 0; i < data.length; i++){
 			if(i == 0){
 				data[i] ^= iv;
 			}else{
-				data[i] ^= data[i-1];
+				data[i] ^= data[i - 1];
 			}
 		}
-		for(int i=0; i<data.length; i++){
+		for(int i = 0; i < data.length; i++){
 			data[i] ^= rand.nextInt(255);
 		}
 	}
@@ -146,15 +147,16 @@ public class MyCrypt32 implements ByteArrayEncryptor, StringEncryptor{
 		decrypt(data, this.encryptIv);
 	}
 	public void decrypt(byte[] data, int iv){
-		XorShift32 rand = new XorShift32(this.cipherKey, 3);
-		for(int i=0; i<data.length; i++){
+		//XorShift32 rand = new XorShift32(this.cipherKey, 3);
+		XorShift32 rand = new XorShift32(this.cipherKey);
+		for(int i = 0; i < data.length; i++){
 			data[i] ^= rand.nextInt(255);
 		}
-		for(int i=data.length-1; i>=0; i--){
+		for(int i = data.length - 1; i >= 0; i--){
 			if(i == 0){
 				data[i] ^= iv;
 			}else{
-				data[i] ^= data[i-1];
+				data[i] ^= data[i - 1];
 			}
 		}
 	}
