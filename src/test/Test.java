@@ -1,5 +1,8 @@
 package test;
 
+import java.awt.Point;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 import interfaces.StringEncryptor;
@@ -46,7 +49,43 @@ public class Test {
 		}
 	}
 
+	/**
+	 * 円を出力
+	 */
+	public static void drawCircle(int radius) {
+		double step = Math.PI / radius / 8;
 
+		char dot = '■';
+		char space = '　';
+
+		//円周の座標リスト
+		List<Point> pointList = new ArrayList<>();
+		for(double radian = 0; radian < 6.28319; radian += step) {
+			double x = radius * Math.cos(radian);
+			double y = radius * Math.sin(radian);
+			pointList.add(new Point((int)Math.round(x), (int)Math.round(y)));
+		}
+
+		//テーブルに書き込み
+		int size = (radius + 1) * 2 - 1;
+		boolean[][] table = new boolean[size][size];
+		for(int i = 0; i < pointList.size(); i++) {
+			Point p = pointList.get(i);
+			table[p.y + radius][p.x + radius] = true;
+		}
+
+		//出力
+		for(int i = 0; i < table.length; i++) {
+			for(int j = 0; j < table[i].length; j++) {
+				if(table[i][j]) {
+					System.out.print(dot);
+				} else {
+					System.out.print(space);
+				}
+			}
+			System.out.println();
+		}
+	}
 
 	/**
 	 * 32bit暗号攻撃テスト
