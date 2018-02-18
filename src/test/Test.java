@@ -50,10 +50,13 @@ public class Test {
 	}
 
 	/**
-	 * 円を出力
+	 * 楕円を出力
+	 * @param raduis 半径
+	 * @param horizontalRatio 横の倍率
+	 * @param verticalRatio 縦の倍率
 	 */
-	public static void drawCircle(int radius) {
-		double step = Math.PI / radius / 8;
+	public static void drawEllipse(int radius, double horizontalRatio, double verticalRatio) {
+		double step = Math.PI / radius / 180;
 
 		char dot = '■';
 		char space = '　';
@@ -61,10 +64,14 @@ public class Test {
 		//円周の座標リスト
 		List<Point> pointList = new ArrayList<>();
 		for(double radian = 0; radian < 6.28319; radian += step) {
-			double x = radius * Math.cos(radian);
-			double y = radius * Math.sin(radian);
+			double x = radius * Math.cos(radian) * horizontalRatio;
+			double y = radius * Math.sin(radian) * verticalRatio;
 			pointList.add(new Point((int)Math.round(x), (int)Math.round(y)));
 		}
+
+		//楕円向けのサイズ調整
+		double ratio = verticalRatio > horizontalRatio ? verticalRatio : horizontalRatio;
+		radius = (int)Math.ceil(radius * ratio);
 
 		//テーブルに書き込み
 		int size = (radius + 1) * 2 - 1;
