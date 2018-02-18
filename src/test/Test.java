@@ -13,6 +13,7 @@ public class Test {
 
 	/**
 	 * ピラミッドを出力
+	 * @params borderOnly 枠線のみ
 	 */
 	public static void printPyramid(int height, boolean borderOnly) {
 		for(int i = 1; i <= height; i++) {
