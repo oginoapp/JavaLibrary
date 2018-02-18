@@ -63,7 +63,7 @@ public class Test {
 
 		//円周の座標リスト
 		List<Point> pointList = new ArrayList<>();
-		for(double radian = 0; radian < 6.28319; radian += step) {
+		for(double radian = 0; radian < Math.PI * 2; radian += step) {
 			double x = radius * Math.cos(radian) * horizontalRatio;
 			double y = radius * Math.sin(radian) * verticalRatio;
 			pointList.add(new Point((int)Math.round(x), (int)Math.round(y)));
