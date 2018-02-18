@@ -14,13 +14,15 @@ public class Test {
 	/**
 	 * ピラミッドを出力
 	 */
-	public static void printPyramid(int height) {
+	public static void printPyramid(int height, boolean borderOnly) {
 		for(int i = 1; i <= height; i++) {
 			for(int j = 1; j < height + i; j++) {
-				if(j > height - i) {
-					System.out.print("*");
-				} else {
+				boolean empty = borderOnly && j > height - i + 1 &&
+						j != height + i - 1 && i != height;
+				if(j <= height - i || empty) {
 					System.out.print(" ");
+				} else {
+					System.out.print("*");
 				}
 			}
 			System.out.println();
@@ -29,14 +31,16 @@ public class Test {
 
 	/**
 	 * ひし形を出力
+	 * @params borderOnly 枠線のみ
 	 */
-	public static void printDiamond(int size) {
+	public static void printDiamond(int size, boolean borderOnly) {
 		final int half = (int)Math.ceil(size / 2D);
 		int i = 1;
 		int increase = 1;
 		while(i > 0) {
 			for(int j = 0; j < half + i - 1; j++) {
-				if(j < half - i) {
+				boolean empty = borderOnly && j != half - i && j != half + i - 2;
+				if(j < half - i || empty) {
 					System.out.print(" ");
 				} else {
 					System.out.print("*");
@@ -55,7 +59,7 @@ public class Test {
 	 * @param horizontalRatio 横の倍率
 	 * @param verticalRatio 縦の倍率
 	 */
-	public static void drawEllipse(int radius, double horizontalRatio, double verticalRatio) {
+	public static void printEllipse(int radius, double horizontalRatio, double verticalRatio) {
 		double step = Math.PI / radius / 180;
 
 		char dot = '■';
