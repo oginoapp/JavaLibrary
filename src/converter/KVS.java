@@ -15,22 +15,6 @@ public class KVS {
 		Map
 	}
 
-	/**
-	 * サンプル
-	 */
-	public static void main(String[] args) {
-		KVS kvs = new KVS(ValueType.Map,
-			new KVS("a1", "a1_data"),
-			new KVS("a2", ValueType.List,
-				new KVS("b1", "b1_data"),
-				new KVS("data")
-			)
-		);
-
-		//{"a1":"a1_data","a2":[{"b1":"b1_data"},"data"]}
-		System.out.println(kvs.toJson());
-	}
-
 	/* キー */
 	private String key;
 	/* 値 */
@@ -73,96 +57,18 @@ public class KVS {
 		this.value = value;
 	}
 
-	/**
-	 * Jsonの文字列に変換
-	 */
-	public String toJson() {
-		StringBuilder json = new StringBuilder();
-
-		if(!isValueOnly) {
-			json.append("\"");
-			json.append(escape(key));
-			json.append("\":");
-		}
-
-		switch(type) {
-		case Map:
-			json.append("{");
-			break;
-		case List:
-			json.append("[");
-			break;
-		default:
-			break;
-		}
-
-		if(value instanceof String) {
-			if(type == ValueType.String) json.append("\"");
-			json.append(escape(value.toString()));
-			if(type == ValueType.String) json.append("\"");
-		} else if(value instanceof KVS[]) {
-			KVS[] values = (KVS[])value;
-
-			for(int i = 0; i < values.length; i++) {
-				boolean quot = type != ValueType.Map && !values[i].isValueOnly;
-				if(quot)
-					json.append("{");
-				json.append(values[i].toJson());
-				if(quot)
-					json.append("}");
-				if(i < values.length - 1)
-					json.append(",");
-			}
-		}
-
-		switch(type) {
-		case Map:
-			json.append("}");
-			break;
-		case List:
-			json.append("]");
-			break;
-		default:
-			break;
-		}
-
-		return json.toString();
+	/* getter */
+	public boolean isValueOnly() {
+		return isValueOnly;
 	}
-
-	/**
-	 * 値をエスケープ
-	 */
-	private String escape(String str) {
-		if(str == null) return str;
-		StringBuilder sb = new StringBuilder();
-
-		for(char c : str.toCharArray()) {
-			switch(c) {
-			case '"':
-				sb.append("\\\"");
-				break;
-			case '\b':
-				sb.append("\\b");
-				break;
-			case '\f':
-				sb.append("\\f");
-				break;
-			case '\n':
-				sb.append("\\n");
-				break;
-			case '\r':
-				sb.append("\\r");
-				break;
-			case '\t':
-				sb.append("\\t");
-				break;
-			default:
-				sb.append(c);
-				break;
-			}
-		}
-
-		return sb.toString();
+	public String getKey() {
+		return key;
+	}
+	public Object getValue() {
+		return value;
+	}
+	public ValueType getType() {
+		return type;
 	}
 
 }
