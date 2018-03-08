@@ -1,5 +1,7 @@
 package converter;
 
+import java.util.Arrays;
+
 /**
  * キーと値をペアで保持する構造
  */
@@ -27,7 +29,7 @@ public class KVS {
 	/**
 	 * 値のみ
 	 */
-	public KVS(String value) {
+	public KVS(Object value) {
 		this(null, value);
 		isValueOnly = true;
 	}
@@ -35,13 +37,21 @@ public class KVS {
 	/**
 	 * キーと値のペア
 	 */
-	public KVS(String key, String value) {
+	public KVS(String key, Object value) {
+		this(key, value instanceof String ? ValueType.String : ValueType.Value, value);
+	}
+
+	/**
+	 * キーと値の種類と値
+	 */
+	public KVS(String key, ValueType type, Object value) {
 		this.key = key;
+		this.type = type;
 		this.value = value;
 	}
 
 	/**
-	 * 値がMapかListの場合
+	 * 値が複数の場合
 	 */
 	public KVS(ValueType type, KVS... value) {
 		this(null, type, value);
@@ -49,12 +59,12 @@ public class KVS {
 	}
 
 	/**
-	 * 値がMapかListの場合
+	 * 値が複数の場合
 	 */
 	public KVS(String key, ValueType type, KVS... value) {
 		this.key = key;
 		this.type = type;
-		this.value = value;
+		if(value != null) this.value = Arrays.asList(value);
 	}
 
 	/* getter */

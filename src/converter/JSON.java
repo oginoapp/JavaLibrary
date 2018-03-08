@@ -1,5 +1,7 @@
 package converter;
 
+import java.util.List;
+
 import converter.KVS.ValueType;
 
 /**
@@ -84,18 +86,19 @@ public class JSON {
 			if(kvs.getType() == ValueType.String) json.append("\"");
 			json.append(escape(kvs.getValue().toString()));
 			if(kvs.getType() == ValueType.String) json.append("\"");
-		} else if(kvs.getValue() instanceof KVS[]) {
-			KVS[] values = (KVS[])kvs.getValue();
+		} else if(kvs.getValue() instanceof List) {
+			@SuppressWarnings("unchecked")
+			List<KVS> values = (List<KVS>)kvs.getValue();
 
-			for(int i = 0; i < values.length; i++) {
-				boolean quot = kvs.getType() != ValueType.Map && !values[i].isValueOnly();
-				if(quot)
-					json.append("{");
-				json.append(new JSON(values[i]).toString());
-				if(quot)
-					json.append("}");
-				if(i < values.length - 1)
-					json.append(",");
+			for(int i = 0; i < values.size(); i++) {
+				boolean quot = kvs.getType() != ValueType.Map
+						&& !values.get(i).isValueOnly();
+
+				if(quot) json.append("{");
+				json.append(new JSON(values.get(i)).toString());
+				if(quot) json.append("}");
+
+				if(i < values.size() - 1) json.append(",");
 			}
 		}
 
