@@ -13,15 +13,20 @@ public class JSON {
 	 * サンプル
 	 */
 	public static void test() {
+		//ノードの生成
 		KVS kvs = new KVS(ValueType.Map,
-			new KVS("a1", "a1_data"),
+			new KVS("a1", true),
 			new KVS("a2", ValueType.List,
-				new KVS("b1", "b1_data"),
-				new KVS("\",\\,\b,\f,\n,\r,\t,/,\u3042")
+				new KVS("b1", 1234),
+				new KVS("b2\",\\,\b,\f,\n,\r,\t,/,\u3042")
 			)
 		);
 
-		//{"a1":"a1_data","a2":[{"b1":"b1_data"},"\",\\,\b,\f,\n,\r,\t,\/,あ"]}
+		//a1.b1のノードに値を追加
+		KVS child1 = new KVS("c1", new KVS("d1", "d1data"));
+		kvs.addNodeAt(child1, "a2", "b1");
+
+		//{"a1":true,"a2":[{"b1":1234,{"c1":{"d1":"d1data"}}},"b2\",\\,\b,\f,\n,\r,\t,\/,あ"]}
 		JSON json = new JSON(kvs);
 		System.out.println(json);
 	}
@@ -82,11 +87,7 @@ public class JSON {
 			break;
 		}
 
-		if(kvs.getValue() instanceof String) {
-			if(kvs.getType() == ValueType.String) json.append("\"");
-			json.append(escape(kvs.getValue().toString()));
-			if(kvs.getType() == ValueType.String) json.append("\"");
-		} else if(kvs.getValue() instanceof List) {
+		if(kvs.getValue() instanceof List) {
 			@SuppressWarnings("unchecked")
 			List<KVS> values = (List<KVS>)kvs.getValue();
 
@@ -100,6 +101,10 @@ public class JSON {
 
 				if(i < values.size() - 1) json.append(",");
 			}
+		} else {
+			if(kvs.getType() == ValueType.String) json.append("\"");
+			json.append(escape(kvs.getValue().toString()));
+			if(kvs.getType() == ValueType.String) json.append("\"");
 		}
 
 		switch(kvs.getType()) {
@@ -114,6 +119,97 @@ public class JSON {
 		}
 
 		return json.toString();
+	}
+
+	/**
+	 * JSONを整形する
+	 */
+	public static String format(String json) {
+		if(json == null) return json;
+		StringBuilder sb = new StringBuilder();
+
+		//状態フラグ
+		boolean quotSeq = false;
+		boolean escapeSeq = false;
+		int indent = 0;
+
+		for(char c : json.toCharArray()) {
+			//エスケープと囲いの判定
+			if(!escapeSeq && c == '\\') {
+				escapeSeq = true;
+			} else if(escapeSeq) {
+				escapeSeq = false;
+			} else if(!quotSeq && !escapeSeq && c == '"') {
+				quotSeq = true;
+			} else if(quotSeq && !escapeSeq && c == '"') {
+				quotSeq = false;
+			}
+
+			//連結
+			if(!quotSeq && (
+					c == ' ' ||
+					c == '\t' ||
+					c == '\r' ||
+					c == '\n'
+					)) {
+				continue;
+			} else {
+				sb.append(c);
+			}
+		}
+
+		json = sb.toString();
+		sb = new StringBuilder();
+		quotSeq = false;
+		escapeSeq = false;
+		indent = 0;
+
+		for(char c : json.toCharArray()) {
+			//文字列操作フラグ
+			boolean beforeNewLine = false;
+			boolean afterNewLine = false;
+			boolean beforeSpace = false;
+			boolean afterSpace = false;
+			String strIndent = null;
+
+			//エスケープと囲いの判定
+			if(!escapeSeq && c == '\\') {
+				escapeSeq = true;
+			} else if(escapeSeq) {
+				escapeSeq = false;
+			} else if(!quotSeq && !escapeSeq && c == '"') {
+				quotSeq = true;
+			} else if(quotSeq && !escapeSeq && c == '"') {
+				quotSeq = false;
+			}
+
+			//改行とインデントの判定
+			if(!quotSeq && (c == '{' || c == '[')) {
+				afterNewLine = true;
+				indent += 1;
+			} else if(!quotSeq && (c == '}' || c == ']')) {
+				beforeNewLine = true;
+				indent -= 1;
+			} else if(!quotSeq && c == ':') {
+				beforeSpace = true;
+				afterSpace = true;
+			} else if(!quotSeq && c == ',') {
+				afterNewLine = true;
+			}
+
+			//連結
+			if(indent > 0 && (beforeNewLine || afterNewLine))
+				strIndent = String.format("%0" + indent + "d", 0).replace('0', '\t');
+			if(beforeNewLine) sb.append('\n');
+			if(indent > 0 && beforeNewLine) sb.append(strIndent);
+			if(beforeSpace) sb.append(' ');
+			sb.append(c);
+			if(afterSpace) sb.append(' ');
+			if(afterNewLine) sb.append('\n');
+			if(indent > 0 && afterNewLine) sb.append(strIndent);
+		}
+
+		return sb.toString();
 	}
 
 	/**
