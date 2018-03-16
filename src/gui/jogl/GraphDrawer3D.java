@@ -9,18 +9,29 @@ import gui.Vertex;
  */
 public class GraphDrawer3D extends JFrame {
 
+	public static enum DrawType {
+		Polygon,
+		Grid
+	}
+
 	/* 描画用エリア */
-	private GraphDrawer3DCanvas canvas;
+	private GLCanvas3D canvas;
 
 	/**
 	 * 初期化
 	 */
-	public GraphDrawer3D(int width, int height) {
-		canvas = new GraphDrawer3DCanvas();
+	public GraphDrawer3D(DrawType type, int width, int height) {
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setTitle("graph");
+
+		if(type == DrawType.Polygon) {
+			canvas = new PolygonGraphCanvas();
+		} else {
+			canvas = new GridGraphCanvas();
+		}
 
 		canvas.setSize(width, height);
 		add(canvas);
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		pack();
 
 		setVisible(true);
