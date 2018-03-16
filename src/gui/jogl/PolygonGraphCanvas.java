@@ -28,7 +28,6 @@ public class PolygonGraphCanvas extends GLCanvas3D {
 			for(int i = 0; i < vertices.length - 1; i++) {
 				for(int j = 0; j < vertices[i].length - 1; j++) {
 					from = vertices[i][j];
-					gl.glColor3f(0.8f, 0.8f, 0.8f);
 					gl.glBegin(GL2.GL_POLYGON);
 					gl.glVertex3f(from.x, from.y, from.z);
 					to = vertices[i + 1][j];
