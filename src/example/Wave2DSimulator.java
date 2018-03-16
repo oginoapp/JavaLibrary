@@ -5,6 +5,13 @@ import gui.jogl.GraphDrawer3D;
 
 /**
  * 2次元波動方程式
+ *
+ * 必要なライブラリ
+ * WindowsでIntelのCPUを使っている場合：
+ *   jogl-all.jar
+ *   jogl-all-natives-windows-i586.jar
+ *   gluegen-rt.jar
+ *   gluegen-rt-natives-windows-i586.jar
  */
 public class Wave2DSimulator {
 
