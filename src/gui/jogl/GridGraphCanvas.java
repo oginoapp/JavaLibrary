@@ -52,14 +52,16 @@ public class GridGraphCanvas extends GLCanvas3D {
 	public void init(GLAutoDrawable drawable) {
 		GL2 gl = drawable.getGL().getGL2();
 		// x軸回転
-		gl.glRotatef(-130f, 1f, 0f, 0f);
-		// y軸回転
-		gl.glRotatef(10f, 0f, -1f, 0f);
+		float rotateX = 50f;
+		gl.glRotatef(rotateX, 1f, 0f, 0f);
 		// z軸回転
-		gl.glRotatef(20f, 0f, 0f, 1f);
+		float rotateZ = 195f;
+		gl.glRotatef(rotateZ, 0f, 0f, 1f);
 
-		// 縮小
-		gl.glScalef(0.8f, 0.8f, 0.8f);
+		// 角が消えるのを防ぐため縮小
+		float ratio = (float)Math.cos((rotateX % 90) * (float)Math.PI / 180f)
+				* (float)Math.cos((rotateZ % 90) * (float)Math.PI / 180f);
+		gl.glScalef(ratio, ratio, ratio);
 	}
 
 	@Override

@@ -148,7 +148,7 @@ public class Wave2DSimulator {
 			// 出力
 			for (int i = 1; i <= imax; i++) {
 				for(int j = 1; j <= jmax; j++){
-					vertices[i - 1][j - 1].z = u[i][j];
+					vertices[i - 1][j - 1].z = -u[i][j];
 				}
 			}
 			try {

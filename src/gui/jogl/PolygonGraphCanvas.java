@@ -21,6 +21,27 @@ public class PolygonGraphCanvas extends GLCanvas3D {
 		// 色を設定
 		gl.glColor3f(0.8f, 0.8f, 0.8f);
 
+		// 背景の枠線を引く
+		float[][] cube = {
+			{-1.0f, -1.0f, 1.0f},
+			{1.0f, -1.0f, 1.0f},
+			{1.0f, 1.0f, 1.0f},
+			{-1.0f, 1.0f, 1.0f},
+			{-1.0f, -1.0f, 1.0f},
+			{-1.0f, 1.0f, 1.0f},
+			{-1.0f, 1.0f, -1.0f},
+			{-1.0f, -1.0f, -1.0f},
+			{-1.0f, -1.0f, 1.0f},
+			{-1.0f, -1.0f, -1.0f},
+			{1.0f, -1.0f, -1.0f},
+			{1.0f, -1.0f, 1.0f},
+		};
+		gl.glBegin(GL2.GL_LINE_LOOP);
+		for(int i = 0; i < cube.length; i++) {
+			gl.glVertex3f(cube[i][0], cube[i][1], cube[i][2]);
+		}
+		gl.glEnd();
+
 		// ポリゴンを描画する
 		Vertex from = null;
 		Vertex to = null;
@@ -41,27 +62,43 @@ public class PolygonGraphCanvas extends GLCanvas3D {
 			}
 		}
 
+		// 背景の枠線を引く
+		gl.glBegin(GL2.GL_LINE_LOOP);
+		for(int i = 0; i < cube.length; i++) {
+			gl.glVertex3f(-cube[i][0], -cube[i][1], -cube[i][2]);
+		}
+		gl.glEnd();
+
 	}
 
 	@Override
 	public void init(GLAutoDrawable drawable) {
 		GL2 gl = drawable.getGL().getGL2();
 		// x軸回転
-		gl.glRotatef(-130f, 1f, 0f, 0f);
-		// y軸回転
-		gl.glRotatef(10f, 0f, -1f, 0f);
+		float rotateX = 50f;
+		gl.glRotatef(rotateX, 1f, 0f, 0f);
 		// z軸回転
-		gl.glRotatef(20f, 0f, 0f, 1f);
+		float rotateZ = 195f;
+		gl.glRotatef(rotateZ, 0f, 0f, 1f);
 
-		// 縮小
-		gl.glScalef(0.8f, 0.8f, 0.8f);
+		// 角が消えるのを防ぐため縮小
+		float ratio = (float)Math.cos((rotateX % 90) * (float)Math.PI / 180f)
+				* (float)Math.cos((rotateZ % 90) * (float)Math.PI / 180f);
+		gl.glScalef(ratio, ratio, ratio);
 
 		// ライティング処理有効化
 		gl.glEnable(GL2.GL_LIGHTING);
 
+		float[] red = {0.5f, 0.5f, 0.5f, 0f};
+		gl.glMaterialfv(GL2.GL_FRONT_AND_BACK, GL2.GL_AMBIENT_AND_DIFFUSE, red, 0);
+
+		// 環境光を設定
+		float[] lightAmbient = { 0.5f, 0.5f, 0.5f, 0.0f };
+	    gl.glLightfv(GL2.GL_LIGHT0, GL2.GL_AMBIENT, lightAmbient, 0);
+
 		// 0番目の光源を設定
-		float[] light0Pos = {-0.8f, -0.8f, 0.5f, 1f};
-		gl.glLightfv(GL2.GL_LIGHT0, GL2.GL_POSITION, light0Pos, 0);
+		float[] light1Pos = {10f, -10f, 1f, 10f};
+		gl.glLightfv(GL2.GL_LIGHT0, GL2.GL_POSITION, light1Pos, 0);
 		gl.glEnable(GL2.GL_LIGHT0);
 	}
 
