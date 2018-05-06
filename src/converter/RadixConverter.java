@@ -18,6 +18,13 @@ public class RadixConverter {
 		if (anyDecimal == null || anyDecimal.isEmpty())
 			throw new NullPointerException("anyDecimal == null || anyDecimal.isEmpty()");
 
+		// 負の数かどうか
+		boolean minus = false;
+		if (anyDecimal.charAt(0) == '-') {
+			minus = true;
+			anyDecimal = anyDecimal.substring(1);
+		}
+
 		// 整数部分と小数部分を分解
 		String[] chunk = anyDecimal.split("\\.");
 
@@ -51,7 +58,7 @@ public class RadixConverter {
 			}
 		}
 
-		return decimal;
+		return minus ? decimal.negate() : decimal;
 	}
 
 }
