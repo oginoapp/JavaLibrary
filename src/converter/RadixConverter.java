@@ -9,7 +9,7 @@ public class RadixConverter {
 
 	/**
 	 * n進数⇒10進数 (2 <= n <= 36)
-	 * 小数点を含む場合、nは2の倍数のみ
+	 * 小数点を含む場合、nは2の累乗数のみ
 	 * @param anyDecimal n進数文字列
 	 * @param radix 基数
 	 * @return 10進数:BigDecimal
