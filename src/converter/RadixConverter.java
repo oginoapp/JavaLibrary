@@ -8,10 +8,10 @@ import java.math.BigDecimal;
 public class RadixConverter {
 
 	/**
-	 * n進数⇒10進数
-	 * 小数点込みでも計算できる
-	 * @param n進数文字列
-	 * @param 基数
+	 * n進数⇒10進数 (2 <= n <= 36)
+	 * 小数点を含む場合、nは2の倍数のみ
+	 * @param anyDecimal n進数文字列
+	 * @param radix 基数
 	 * @return 10進数:BigDecimal
 	 */
 	public static BigDecimal anyDecimalToDecimal(String anyDecimal, int radix) {
