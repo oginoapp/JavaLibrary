@@ -20,16 +20,14 @@ public class BinaryNumberRepresentation {
 
 		double increment = 1;
 
-		while (true) {
+		while (increment > 0.000000000000001) {
 			tmp = Math.pow(10, exp);
-			if (increment <= 0.000000000000001) {
-				break;
-			}
 
 			if (tmp >= significantDigits) {
 				exp -= increment;
 				increment /= 2;
 			}
+
 			exp += increment;
 		}
 
