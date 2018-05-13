@@ -8,12 +8,12 @@ public interface ByteArrayEncryptor{
 	public <T> void setEncryptIv(T iv);
 
 	/**
-	 * テキストの暗号化(バイト配列)
+	 * バイト配列の暗号化
 	 */
 	public void encrypt(byte[] data);
 
 	/**
-	 * テキストの復号化(バイト配列)
+	 * バイト配列の復号化
 	 */
 	public void decrypt(byte[] data);
 
