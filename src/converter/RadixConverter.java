@@ -8,6 +8,18 @@ import java.math.BigDecimal;
 public class RadixConverter {
 
 	/**
+	 * n進数⇒n進数変換
+	 * 非常に大きな桁数と小数に対応
+	 *
+	 * @param anyDecimal 変換したい数
+	 * @param 基数（変換元）
+	 * @param 基数（変換先）
+	 */
+	public static String anyDecimalToAnyDecimal(String anyDecimal, int radixFrom, int radixTo) {
+		return decimalToAnyDecimal(anyDecimalToDecimal(anyDecimal, radixFrom), radixTo);
+	}
+
+	/**
 	 * n進数⇒10進数 (2 <= n <= 36)
 	 * 小数点を含む場合、nは2の累乗数のみ
 	 * @param anyDecimal n進数文字列
@@ -142,7 +154,7 @@ public class RadixConverter {
 		// 2進数でのテスト
 		for (double i = 0; i < 100; i += 0.1) {
 			BigDecimal decimal = new BigDecimal(i);
-			String anyDecimal = RadixConverter.decimalToAnyDecimal(new BigDecimal(i), 2);
+			String anyDecimal = RadixConverter.decimalToAnyDecimal(decimal, 2);
 			BigDecimal result = RadixConverter.anyDecimalToDecimal(anyDecimal, 2);
 			if (decimal.subtract(result).abs().compareTo(accuracy) == 1) {
 				throw new ArithmeticException();
@@ -152,7 +164,7 @@ public class RadixConverter {
 		// 8進数でのテスト
 		for (double i = 0; i < 100; i += 0.1) {
 			BigDecimal decimal = new BigDecimal(i);
-			String anyDecimal = RadixConverter.decimalToAnyDecimal(new BigDecimal(i), 8);
+			String anyDecimal = RadixConverter.decimalToAnyDecimal(decimal, 8);
 			BigDecimal result = RadixConverter.anyDecimalToDecimal(anyDecimal, 8);
 			if (decimal.subtract(result).abs().compareTo(accuracy) == 1) {
 				throw new ArithmeticException();
@@ -162,7 +174,7 @@ public class RadixConverter {
 		// 16進数でのテスト
 		for (double i = 0; i < 100; i += 0.1) {
 			BigDecimal decimal = new BigDecimal(i);
-			String anyDecimal = RadixConverter.decimalToAnyDecimal(new BigDecimal(i), 16);
+			String anyDecimal = RadixConverter.decimalToAnyDecimal(decimal, 16);
 			BigDecimal result = RadixConverter.anyDecimalToDecimal(anyDecimal, 16);
 			if (decimal.subtract(result).abs().compareTo(accuracy) == 1) {
 				throw new ArithmeticException();
