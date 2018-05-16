@@ -1,6 +1,7 @@
 package converter;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 /**
  * 基数変換
@@ -8,7 +9,7 @@ import java.math.BigDecimal;
 public class RadixConverter {
 
 	/**
-	 * n進数⇒n進数変換
+	 * n進数⇒n進数変換 (2 <= n <= 36)
 	 * 非常に大きな桁数と小数に対応
 	 *
 	 * @param anyDecimal 変換したい数
@@ -21,7 +22,7 @@ public class RadixConverter {
 
 	/**
 	 * n進数⇒10進数 (2 <= n <= 36)
-	 * 小数点を含む場合、nは2の累乗数のみ
+	 *
 	 * @param anyDecimal n進数文字列
 	 * @param radix 基数
 	 * @return 10進数:BigDecimal
@@ -66,7 +67,7 @@ public class RadixConverter {
 			for (int i = 0, exponent = 1; i < fractionalPart.length; i++, exponent++) {
 				BigDecimal num1 = new BigDecimal(Integer.parseInt(String.valueOf(fractionalPart[i]), radix));
 				BigDecimal num2 = new BigDecimal(Math.pow(radix, exponent));
-				decimal = decimal.add(num1.divide(num2));
+				decimal = decimal.add(num1.divide(num2, 1024, RoundingMode.HALF_UP));
 			}
 		}
 
@@ -74,18 +75,18 @@ public class RadixConverter {
 	}
 
 	/**
-	 * 10進数⇒n進数
+	 * 10進数⇒n進数 (2 <= n <= 36)
 	 *
 	 * @param decimal 10進数
 	 * @param radix 基数
 	 * @param n進数文字列
 	 */
 	public static String decimalToAnyDecimal(BigDecimal decimal, int radix) {
-		return decimalToAnyDecimal(decimal, radix, 128);
+		return decimalToAnyDecimal(decimal, radix, 1024);
 	}
 
 	/**
-	 * 10進数⇒n進数
+	 * 10進数⇒n進数 (2 <= n <= 36)
 	 *
 	 * @param decimal 10進数
 	 * @param radix 基数
