@@ -91,7 +91,7 @@ public abstract class Counter extends Thread{
 				sw.stop();
 
 				//オーバーヘッド計算
-				long sleep = interval - sw.getElapsedMillis();
+				long sleep = interval - sw.elapsed();
 				Thread.sleep(sleep >= 0 ? sleep : 0);
 
 				//待機処理
