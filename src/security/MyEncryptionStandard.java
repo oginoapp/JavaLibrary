@@ -12,10 +12,11 @@ import interfaces.StringEncryptor;
 import math.XorShiftVariable;
 
 /**
- * 自分専用の標準暗号化アルゴリズム
+ * 自分専用の共通鍵暗号化アルゴリズム
  * 16進数の任意の長さの暗号キーを使い
  * CBCモードで暗号化する
- * @see 依存クラス: XorShiftVariable
+ *
+ * @see math.XorShiftVariable 疑似乱数生成に使う
  */
 public class MyEncryptionStandard implements ByteArrayEncryptor, StringEncryptor{
 	private int[] keyTokens = null;
@@ -29,8 +30,9 @@ public class MyEncryptionStandard implements ByteArrayEncryptor, StringEncryptor
 	private SecureRandom rand = new SecureRandom();
 
 	/**
-	 * @機能概要：コンストラクタ
-	 * @param 暗号キー(任意の桁数の16進数文字列)
+	 * コンストラクタ
+	 *
+	 * @param cipherKey 暗号キー(任意の桁数の16進数文字列)
 	 */
 	public MyEncryptionStandard(String cipherKey) throws NumberFormatException, NullPointerException{
 		if(cipherKey == null || cipherKey.isEmpty()){
@@ -54,7 +56,8 @@ public class MyEncryptionStandard implements ByteArrayEncryptor, StringEncryptor
 
 	/**
 	 * コンストラクタ
-     * @param 暗号キー(32ビット整数の配列)
+	 *
+     * @param keyTokens 暗号キー(32ビット整数の配列)
 	 */
 	public MyEncryptionStandard(int[] keyTokens){
 		this.keyTokens = keyTokens.clone();
@@ -62,6 +65,7 @@ public class MyEncryptionStandard implements ByteArrayEncryptor, StringEncryptor
 
 	/**
 	 * 文字コードの設定
+	 *
 	 * @param charset 文字コード
 	 */
 	public void setCharset(Charset charset){
@@ -69,8 +73,9 @@ public class MyEncryptionStandard implements ByteArrayEncryptor, StringEncryptor
 	}
 
 	/**
-	 * @機能概要：初期化ベクトルをセットする
-	 * @引数１：int型の値(乱数推奨)
+	 * 初期化ベクトルをセットする
+	 *
+	 * @param encryptIv int型の値(乱数推奨)
 	 */
 	@Override
 	public <T> void setEncryptIv(T encryptIv) {
@@ -78,9 +83,10 @@ public class MyEncryptionStandard implements ByteArrayEncryptor, StringEncryptor
 	}
 
 	/**
-	 * @機能概要：IVを生成して文字列を暗号化する
-	 * @引数１：暗号化する文字列
-	 * @戻り値：暗号化された16進数文字列（IVを含む）
+	 * IVを生成して文字列を暗号化する
+	 *
+	 * @param strData 暗号化する文字列
+	 * @return 暗号化された16進数文字列（IVを含む）
 	 */
 	@Override
 	public String encryptWithIv(String strData){
@@ -89,14 +95,23 @@ public class MyEncryptionStandard implements ByteArrayEncryptor, StringEncryptor
 	}
 
 	/**
-	 * @機能概要：文字列を暗号化する
-	 * @引数１：暗号化する文字列
-	 * @戻り値：暗号化された16進数文字列
+	 * 文字列を暗号化する
+	 *
+	 * @param strData 暗号化する文字列
+	 * @return 暗号化された16進数文字列
 	 */
 	@Override
 	public String encrypt(String strData){
 		return encrypt(strData, this.encryptIv);
 	}
+
+	/**
+	 * 文字列を暗号化する
+	 *
+	 * @param strData 暗号化する文字列
+	 * @param iv 初期化ベクトル
+	 * @return 暗号化された16進数文字列
+	 */
 	public String encrypt(String strData, int iv){
 		byte[] data = strData.getBytes(charset);
 		encrypt(data, iv);
@@ -104,19 +119,27 @@ public class MyEncryptionStandard implements ByteArrayEncryptor, StringEncryptor
 	}
 
 	/**
-	 * @機能概要：バイト配列を暗号化する
-	 * @引数１：暗号化するバイト配列
+	 * バイト配列を暗号化する
+	 *
+	 * @param data 暗号化するバイト配列
 	 */
 	public void encrypt(byte[] data){
 		encrypt(data, this.encryptIv);
 	}
+
+	/**
+	 * バイト配列を暗号化する
+	 *
+	 * @param data 暗号化するバイト配列
+	 * @param iv 初期化ベクトル
+	 */
 	public void encrypt(byte[] data, int iv){
 		XorShiftVariable rand = new XorShiftVariable(this.keyTokens);
 		for(int i = 0; i < data.length; i++){
 			if(i == 0){
 				data[i] ^= iv;
 			}else{
-				data[i] ^= data[i-1];
+				data[i] ^= data[i - 1];
 			}
 		}
 		for(int i = 0; i < data.length; i++){
@@ -125,9 +148,10 @@ public class MyEncryptionStandard implements ByteArrayEncryptor, StringEncryptor
 	}
 
 	/**
-	 * @機能概要：IVを含む16進数文字列を復号化する
-	 * @引数１：暗号化された16進数文字列（IVを含む）
-	 * @戻り値：復号化された文字列
+	 * IVを含む16進数文字列を復号化する
+	 *
+	 * @param strData 暗号化された16進数文字列（IVを含む）
+	 * @return 復号化された文字列
 	 */
 	@Override
 	public String decryptWithIv(String strData){
@@ -137,14 +161,23 @@ public class MyEncryptionStandard implements ByteArrayEncryptor, StringEncryptor
 	}
 
 	/**
-	 * @機能概要：16進数文字列を復号化する
-	 * @引数１：暗号化された16進数文字列
-	 * @戻り値：復号化された文字列
+	 * 16進数文字列を復号化する
+	 *
+	 * @param strData 暗号化された16進数文字列
+	 * @return 復号化された文字列
 	 */
 	@Override
 	public String decrypt(String strData){
 		return decrypt(strData, this.encryptIv);
 	}
+
+	/**
+	 * 16進数文字列を復号化する
+	 *
+	 * @param strData 暗号化された16進数文字列
+	 * @param iv 初期化ベクトル
+	 * @return 復号化された文字列
+	 */
 	public String decrypt(String strData, int iv){
 		byte[] data = DatatypeConverter.parseHexBinary(strData);
 		decrypt(data, iv);
@@ -152,12 +185,20 @@ public class MyEncryptionStandard implements ByteArrayEncryptor, StringEncryptor
 	}
 
 	/**
-	 * @機能概要：バイト配列を復号化する
-	 * @引数１：復号化するバイト配列
+	 * バイト配列を復号化する
+	 *
+	 * @param data 復号化するバイト配列
 	 */
 	public void decrypt(byte[] data){
 		decrypt(data, this.encryptIv);
 	}
+
+	/**
+	 * バイト配列を復号化する
+	 *
+	 * @param data 復号化するバイト配列
+	 * @param iv 初期化ベクトル
+	 */
 	public void decrypt(byte[] data, int iv){
 		XorShiftVariable rand = new XorShiftVariable(this.keyTokens);
 		for(int i = 0; i < data.length; i++){
@@ -167,7 +208,7 @@ public class MyEncryptionStandard implements ByteArrayEncryptor, StringEncryptor
 			if(i == 0){
 				data[i] ^= iv;
 			}else{
-				data[i] ^= data[i-1];
+				data[i] ^= data[i - 1];
 			}
 		}
 	}
