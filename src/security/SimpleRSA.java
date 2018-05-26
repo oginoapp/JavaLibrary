@@ -107,8 +107,6 @@ public class SimpleRSA {
 	public static void test() {
 		KeyPair keyPair = generateKey(1024);
 
-		BigInteger e = new BigInteger(keyPair.publicKey.exponent);
-		BigInteger d = new BigInteger(keyPair.privateKey.exponent);
 		BigInteger n = new BigInteger(keyPair.privateKey.modules);
 
 		for (BigInteger i = BigInteger.ZERO;
@@ -117,9 +115,9 @@ public class SimpleRSA {
 			BigInteger data = i;
 
 			// 暗号化
-			BigInteger enc = data.modPow(e, n);
+			BigInteger enc = crypt(data, keyPair.publicKey);
 			// 復号化
-			BigInteger dec = enc.modPow(d, n);
+			BigInteger dec = crypt(enc, keyPair.privateKey);
 
 			// 平文⇒ 暗号データ⇒ 復号データ を出力
 			System.out.println(data + "⇒\t" + enc + "⇒\t" + dec);
