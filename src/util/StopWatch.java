@@ -24,8 +24,6 @@ public class StopWatch {
 	 * 状態をリセットして計測を開始する
 	 */
 	public void start() {
-		if (run)
-			return;
 		synchronized (lock) {
 			start = System.nanoTime();
 			run = true;
@@ -48,12 +46,7 @@ public class StopWatch {
 	 * 状態をリセットせずに計測を再開する
 	 */
 	public void resume() {
-		if (run)
-			return;
-		synchronized (lock) {
-			start = System.nanoTime();
-			run = true;
-		}
+		run = true;
 	}
 
 	/**
