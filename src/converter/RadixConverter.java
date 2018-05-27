@@ -48,6 +48,7 @@ public class RadixConverter {
 		String[] chunk = anyDecimal.split("\\.");
 
 		BigDecimal decimal = BigDecimal.ZERO;
+		BigDecimal bdRadix = new BigDecimal(radix);
 
 		// 整数部分
 		if (chunk.length > 0) {
@@ -58,7 +59,7 @@ public class RadixConverter {
 			char[] numberPart = chunk[0].toCharArray();
 			for (int i = numberPart.length - 1, exponent = 0; i >= 0; i--, exponent++) {
 				BigDecimal num1 = new BigDecimal(Integer.parseInt(String.valueOf(numberPart[i]), radix));
-				BigDecimal num2 = new BigDecimal(Math.pow(radix, exponent));
+				BigDecimal num2 = bdRadix.pow(exponent);
 				decimal = decimal.add(num1.multiply(num2));
 			}
 		}
@@ -72,7 +73,7 @@ public class RadixConverter {
 			char[] fractionalPart = chunk[1].toCharArray();
 			for (int i = 0, exponent = 1; i < fractionalPart.length; i++, exponent++) {
 				BigDecimal num1 = new BigDecimal(Integer.parseInt(String.valueOf(fractionalPart[i]), radix));
-				BigDecimal num2 = new BigDecimal(Math.pow(radix, exponent));
+				BigDecimal num2 = bdRadix.pow(exponent);
 				decimal = decimal.add(num1.divide(num2, 1024, RoundingMode.HALF_UP));
 			}
 		}
