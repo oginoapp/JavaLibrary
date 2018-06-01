@@ -1,7 +1,8 @@
 ## 主な機能
 - オブジェクト⇒JSON変換 - converter.JSON.java
+- n進数 ⇔ n進数変換 - converter.RadixConverter.java
+- Base64エンコード - converter.Base64.java
 - 暗号化 - security.MyEncryptionStandard.java
-- 62進数変換 - lang.Base62.java
 - 辞書を使った文字列の比較 - lang.StringComparator.java
 - ソケット通信 - net.*
 - ポートスキャン - net.PortScanner.java
