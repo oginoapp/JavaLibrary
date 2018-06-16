@@ -7,8 +7,6 @@ import javax.crypto.Cipher;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
-import org.apache.commons.codec.binary.Base64;
-
 import interfaces.StringEncryptor;
 
 /**
@@ -138,7 +136,7 @@ public class AES256 implements StringEncryptor{
 			byte[] byteResult = cipher.doFinal(byteText);
 
 			// Base64へエンコード
-			strResult = Base64.encodeBase64String(byteResult);
+			strResult = converter.Base64.encode(byteResult);
 		}catch(Exception ex){
 			ex.printStackTrace();
 		}
@@ -159,7 +157,7 @@ public class AES256 implements StringEncryptor{
 
 		try{
 			// Base64をデコード
-			byte[] byteText = Base64.decodeBase64(text);
+			byte[] byteText = converter.Base64.decode(text);
 
 			// 暗号化キーと初期化ベクトルをバイト配列へ変換
 			byte[] byteKey = encryptKey.getBytes(charset);

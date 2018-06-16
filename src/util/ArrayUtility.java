@@ -85,4 +85,36 @@ public class ArrayUtility{
 		return result;
 	}
 
+	/**
+	 * byte配列を等分に分割
+	 * @param arr 配列
+	 * @param chunkSize 固まりのサイズ
+	 * @return 分割された2次元配列
+	 */
+	public static byte[][] divideArray(byte[] arr, int chunkSize){
+		int len = (int)Math.ceil(arr.length / (double)chunkSize);
+		byte[][] result = new byte[len][chunkSize];
+
+		for(int i = 0, start = 0; i < result.length; i++, start += chunkSize) {
+			result[i] = Arrays.copyOfRange(arr, start, start + chunkSize);
+		}
+
+		return result;
+	}/**
+	 * int配列を等分に分割
+	 * @param arr 配列
+	 * @param chunkSize 固まりのサイズ
+	 * @return 分割された2次元配列
+	 */
+	public static int[][] divideArray(int[] arr, int chunkSize){
+		int len = (int)Math.ceil(arr.length / (double)chunkSize);
+		int[][] result = new int[len][chunkSize];
+
+		for(int i = 0, start = 0; i < result.length; i++, start += chunkSize) {
+			result[i] = Arrays.copyOfRange(arr, start, start + chunkSize);
+		}
+
+		return result;
+	}
+
 }

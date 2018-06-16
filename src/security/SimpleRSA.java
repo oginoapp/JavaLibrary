@@ -1,16 +1,24 @@
 package security;
 
+import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.nio.charset.StandardCharsets;
 import java.security.SecureRandom;
 import java.util.Random;
 
+import javax.xml.bind.DatatypeConverter;
+
+import converter.Base64;
+import converter.RadixConverter;
 import math.Functions;
 
 /**
  * 簡単な公開鍵暗号アルゴリズム
  *
  * @param generateKey 公開鍵と秘密鍵のキーペアを生成する
- * @param crypt 暗号化または復号化をする
+ * @param crypt 整数データの暗号化または復号化をする
+ * @param encrypt 文字列を暗号化する
+ * @param decrypt 文字列を復号化する
  */
 public class SimpleRSA {
 
@@ -50,6 +58,7 @@ public class SimpleRSA {
 	 * 公開鍵と秘密鍵のキーペアを生成する
 	 *
 	 * @param bits 生成するキーのビット数
+	 * @return 生成されたキーペア
 	 */
 	public static KeyPair generateKey(int bits) {
 		// 生成する数値が素数である確率は(1 - 1/2^certainty)より大きい
@@ -94,11 +103,91 @@ public class SimpleRSA {
 	 * 暗号化または復号化をする
 	 *
 	 * @param data 暗号化前または暗号化後の整数データ
+	 * @return 暗号データまたは復号データ
 	 */
 	public static BigInteger crypt(BigInteger data, KeyPair.Key key) {
 		BigInteger e = new BigInteger(key.exponent);
 		BigInteger m = new BigInteger(key.modules);
 		return data.modPow(e, m);
+	}
+
+	/**
+	 * 暗号化をする
+	 *
+	 * @param data 暗号化したい文字列
+	 * @return 暗号化された文字列
+	 */
+	public static String encrypt(String data, KeyPair.Key key) {
+		StringBuilder result = new StringBuilder();
+
+		// 文字列から整数に変換
+		byte[] byteData = data.getBytes(StandardCharsets.UTF_8);
+
+		// データとキーの長さ取得
+		int dataLenB = byteData.length;
+		int keyLenB = RadixConverter.decimalToAnyDecimal(
+				new BigDecimal(key.exponent), 2).length() / 8;
+
+		// 暗号キーの長さが足りない場合
+		if (dataLenB > keyLenB) {
+			throw new IllegalArgumentException("dataLenB > keyLenB");
+		}
+
+		// 16進数に変換
+		String hexData = DatatypeConverter.printHexBinary(byteData);
+
+		// 整数に変換
+		BigInteger intData = new BigInteger(RadixConverter.anyDecimalToDecimal(hexData, 16).toString());
+
+		// 暗号化
+		BigInteger enc = crypt(intData, key);
+
+		// 16進数に変換
+		hexData = RadixConverter.decimalToAnyDecimal(new BigDecimal(enc), 16).toString();
+
+		// byte配列に変換
+		if (hexData.length() % 2 != 0)
+			hexData = "0" + hexData;
+		byte[] tmp = DatatypeConverter.parseHexBinary(hexData);
+		// Base64に変換
+		result.append(Base64.encode(tmp));
+
+		return result.toString();
+	}
+
+	/**
+	 * 復号化をする
+	 *
+	 * @param data 復号化したい文字列
+	 * @return 復号化された文字列
+	 */
+	public static String decrypt(String data, KeyPair.Key key) {
+		String result;
+
+		// byte配列に変換
+		byte[] byteData = Base64.decode(data);
+
+		// 16進数に変換
+		String hexData = DatatypeConverter.printHexBinary(byteData);
+
+		// 整数に変換
+		BigInteger intData = new BigInteger(RadixConverter.anyDecimalToDecimal(hexData, 16).toString());
+
+		// 復号化
+		BigInteger enc = crypt(intData, key);
+
+		// 整数から文字列に変換
+		hexData = RadixConverter.decimalToAnyDecimal(new BigDecimal(enc), 16).toString();
+
+		// byte配列に変換
+		if (hexData.length() % 2 != 0)
+			hexData = "0" + hexData;
+		byteData = DatatypeConverter.parseHexBinary(hexData);
+
+		// 文字列に変換
+		result = new String(byteData, StandardCharsets.UTF_8);
+
+		return result;
 	}
 
 	/**
@@ -109,8 +198,8 @@ public class SimpleRSA {
 
 		BigInteger n = new BigInteger(keyPair.privateKey.modules);
 
-		for (BigInteger i = BigInteger.ZERO;
-				i.compareTo(n) <= -1 && i.compareTo(new BigInteger("100")) <= -1;
+		for (BigInteger i = BigInteger.ONE;
+				i.compareTo(n) <= -1 && i.compareTo(new BigInteger("3")) <= -1;
 				i = i.add(BigInteger.ONE)) {
 			BigInteger data = i;
 
