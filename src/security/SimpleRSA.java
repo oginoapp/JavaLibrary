@@ -6,8 +6,6 @@ import java.nio.charset.StandardCharsets;
 import java.security.SecureRandom;
 import java.util.Random;
 
-import javax.xml.bind.DatatypeConverter;
-
 import converter.Base64;
 import converter.RadixConverter;
 import math.Functions;
@@ -118,9 +116,12 @@ public class SimpleRSA {
 	 * @return 暗号化された文字列
 	 */
 	public static String encrypt(String data, KeyPair.Key key) {
-		StringBuilder result = new StringBuilder();
+		String result;
 
-		// 文字列から整数に変換
+		// パディング
+		data = "0" + data;
+
+		// 文字列 ⇒ byte配列
 		byte[] byteData = data.getBytes(StandardCharsets.UTF_8);
 
 		// データとキーの長さ取得
@@ -133,59 +134,47 @@ public class SimpleRSA {
 			throw new IllegalArgumentException("dataLenB > keyLenB");
 		}
 
-		// 16進数に変換
-		String hexData = DatatypeConverter.printHexBinary(byteData);
-
-		// 整数に変換
-		BigInteger intData = new BigInteger(RadixConverter.anyDecimalToDecimal(hexData, 16).toString());
+		// byte配列 ⇒ 整数
+		BigInteger intData = new BigInteger(byteData);
 
 		// 暗号化
 		BigInteger enc = crypt(intData, key);
 
-		// 16進数に変換
-		hexData = RadixConverter.decimalToAnyDecimal(new BigDecimal(enc), 16).toString();
+		// 整数 ⇒ byte配列
+		byte[] tmp = enc.toByteArray();
 
-		// byte配列に変換
-		if (hexData.length() % 2 != 0)
-			hexData = "0" + hexData;
-		byte[] tmp = DatatypeConverter.parseHexBinary(hexData);
-		// Base64に変換
-		result.append(Base64.encode(tmp));
+		// byte配列 ⇒ Base64に変換
+		result = Base64.encode(tmp);
 
-		return result.toString();
+		return result;
 	}
 
 	/**
 	 * 復号化をする
 	 *
-	 * @param data 復号化したい文字列
+	 * @param base64 復号化したい文字列
 	 * @return 復号化された文字列
 	 */
-	public static String decrypt(String data, KeyPair.Key key) {
+	public static String decrypt(String base64, KeyPair.Key key) {
 		String result;
 
-		// byte配列に変換
-		byte[] byteData = Base64.decode(data);
+		// base64 ⇒ byte配列
+		byte[] byteData = Base64.decode(base64);
 
-		// 16進数に変換
-		String hexData = DatatypeConverter.printHexBinary(byteData);
-
-		// 整数に変換
-		BigInteger intData = new BigInteger(RadixConverter.anyDecimalToDecimal(hexData, 16).toString());
+		// byte配列 ⇒ 整数
+		BigInteger intData = new BigInteger(byteData);
 
 		// 復号化
-		BigInteger enc = crypt(intData, key);
+		BigInteger dnc = crypt(intData, key);
 
-		// 整数から文字列に変換
-		hexData = RadixConverter.decimalToAnyDecimal(new BigDecimal(enc), 16).toString();
+		// 整数 ⇒ byte配列
+		byteData = dnc.toByteArray();
 
-		// byte配列に変換
-		if (hexData.length() % 2 != 0)
-			hexData = "0" + hexData;
-		byteData = DatatypeConverter.parseHexBinary(hexData);
-
-		// 文字列に変換
+		// byte配列 ⇒ 文字列
 		result = new String(byteData, StandardCharsets.UTF_8);
+
+		// パディング解除
+		result = result.substring(1);
 
 		return result;
 	}
