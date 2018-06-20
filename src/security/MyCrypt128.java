@@ -131,7 +131,7 @@ public class MyCrypt128 implements ByteArrayEncryptor, StringEncryptor{
 			}
 		}
 		for(int i=0; i<data.length; i++){
-			data[i] ^= rand.nextInt(255);
+			data[i] ^= rand.nextInt(256);
 		}
 	}
 
@@ -176,7 +176,7 @@ public class MyCrypt128 implements ByteArrayEncryptor, StringEncryptor{
 				this.keyToken3,
 				this.keyToken4);
 		for(int i=0; i<data.length; i++){
-			data[i] ^= rand.nextInt(255);
+			data[i] ^= rand.nextInt(256);
 		}
 		for(int i=data.length-1; i>=0; i--){
 			if(i == 0){

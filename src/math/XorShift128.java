@@ -6,8 +6,6 @@ import interfaces.IntPRNG;
 
 /**
  * 128bitのXorShiftによる疑似乱数の生成クラス
- * @author ogino
- * @version 20161230
  */
 public class XorShift128 implements IntPRNG{
     private int x = -1;
@@ -42,17 +40,17 @@ public class XorShift128 implements IntPRNG{
 	}
 
 	/**
-	 * 0から最大値までの疑似乱数生成
-	 * @param max 最大値
+	 * 0 から 最大値-1 までの疑似乱数生成
+	 * @param n 最大値+1
 	 * @return 生成された乱数
 	 */
 	@Override
-	public synchronized int nextInt(int max){
+	public synchronized int nextInt(int n){
 		int t = x ^ (x << 11);
 
 		x = y; y = z; z = w;
 		w = (w ^ (w >> 19)) ^ (t ^ (t >> 8));
 
-		return Math.abs(w) % (max + 1);
+		return Math.abs(w) % n;
 	}
 }

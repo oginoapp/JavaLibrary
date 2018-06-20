@@ -10,14 +10,7 @@ import interfaces.StringEncryptor;
 import math.XorShift32;
 
 /**
- * @クラス説明：バーナム暗号
- * @使用方法：
- * MyCrypt mc = new MyCrypt(12345678, random.nextInt(999999));
- * mc.encrypt(data);
- * mc.decrypt(data);
- * @更新履歴：
- * 20160803 - 新規作成
- * 20160901 - IVを含む暗号化、複合化
+ * 32bitキーの暗号アルゴリズム
  */
 public class MyCrypt32 implements ByteArrayEncryptor, StringEncryptor{
 	private int cipherKey;
@@ -27,17 +20,19 @@ public class MyCrypt32 implements ByteArrayEncryptor, StringEncryptor{
 	private SecureRandom rand = new SecureRandom();
 
 	/**
-	 * @機能概要：コンストラクタ
-	 * @引数１：int型の暗号化キー（8桁推奨）
+	 * コンストラクタ
+	 *
+	 * @param cipherKey int型の暗号化キー（8桁推奨）
 	 */
 	public MyCrypt32(int cipherKey){
 		this(cipherKey, 0);
 	}
 
 	/**
-	 * @機能概要：コンストラクタ
-	 * @引数１：int型の暗号化キー（8桁推奨）
-	 * @引数２：int型の初期化ベクトル(乱数推奨)
+	 * コンストラクタ
+	 *
+	 * @param cipherKey int型の暗号化キー（8桁推奨）
+	 * @param iv int型の初期化ベクトル(乱数推奨)
 	 */
 	public MyCrypt32(int cipherKey, int iv){
 		this.cipherKey = cipherKey;
@@ -45,8 +40,9 @@ public class MyCrypt32 implements ByteArrayEncryptor, StringEncryptor{
 	}
 
 	/**
-	 * @機能概要：初期化ベクトルをセットする
-	 * @引数１：int型の値(乱数推奨)
+	 * 初期化ベクトルをセットする
+	 *
+	 * @param encryptIv int型の値(乱数推奨)
 	 */
 	@Override
 	public <T> void setEncryptIv(T encryptIv) {
@@ -54,9 +50,10 @@ public class MyCrypt32 implements ByteArrayEncryptor, StringEncryptor{
 	}
 
 	/**
-	 * @機能概要：IVを生成して文字列を暗号化する
-	 * @引数１：暗号化する文字列
-	 * @戻り値：暗号化された16進数文字列（IVを含む）
+	 * IVを生成して文字列を暗号化する
+	 *
+	 * @param strData 暗号化する文字列
+	 * @return 暗号化された16進数文字列（IVを含む）
 	 */
 	@Override
 	public String encryptWithIv(String strData){
@@ -65,9 +62,10 @@ public class MyCrypt32 implements ByteArrayEncryptor, StringEncryptor{
 	}
 
 	/**
-	 * @機能概要：文字列を暗号化する
-	 * @引数１：暗号化する文字列
-	 * @戻り値：暗号化された16進数文字列
+	 * 文字列を暗号化する
+	 *
+	 * @param strData 暗号化する文字列
+	 * @return 暗号化された16進数文字列
 	 */
 	@Override
 	public String encrypt(String strData){
@@ -85,8 +83,9 @@ public class MyCrypt32 implements ByteArrayEncryptor, StringEncryptor{
 	}
 
 	/**
-	 * @機能概要：バイト配列を暗号化する
-	 * @引数１：暗号化するバイト配列
+	 * バイト配列を暗号化する
+	 *
+	 * @param data 暗号化するバイト配列
 	 */
 	public void encrypt(byte[] data){
 		encrypt(data, this.encryptIv);
@@ -102,14 +101,15 @@ public class MyCrypt32 implements ByteArrayEncryptor, StringEncryptor{
 			}
 		}
 		for(int i = 0; i < data.length; i++){
-			data[i] ^= rand.nextInt(255);
+			data[i] ^= rand.nextInt(256);
 		}
 	}
 
 	/**
-	 * @機能概要：IVを含む16進数文字列を復号化する
-	 * @引数１：暗号化された16進数文字列（IVを含む）
-	 * @戻り値：復号化された文字列
+	 * IVを含む16進数文字列を復号化する
+	 *
+	 * @param strData 暗号化された16進数文字列（IVを含む）
+	 * @return 復号化された文字列
 	 */
 	@Override
 	public String decryptWithIv(String strData){
@@ -119,9 +119,10 @@ public class MyCrypt32 implements ByteArrayEncryptor, StringEncryptor{
 	}
 
 	/**
-	 * @機能概要：16進数文字列を復号化する
-	 * @引数１：暗号化された16進数文字列
-	 * @戻り値：復号化された文字列
+	 * 16進数文字列を復号化する
+	 *
+	 * @param strData 暗号化された16進数文字列
+	 * @return 復号化された文字列
 	 */
 	@Override
 	public String decrypt(String strData){
@@ -140,8 +141,9 @@ public class MyCrypt32 implements ByteArrayEncryptor, StringEncryptor{
 	}
 
 	/**
-	 * @機能概要：バイト配列を復号化する
-	 * @引数１：復号化するバイト配列
+	 * バイト配列を復号化する
+	 *
+	 * @param data 復号化するバイト配列
 	 */
 	public void decrypt(byte[] data){
 		decrypt(data, this.encryptIv);
@@ -150,7 +152,7 @@ public class MyCrypt32 implements ByteArrayEncryptor, StringEncryptor{
 		//XorShift32 rand = new XorShift32(this.cipherKey, 3);
 		XorShift32 rand = new XorShift32(this.cipherKey);
 		for(int i = 0; i < data.length; i++){
-			data[i] ^= rand.nextInt(255);
+			data[i] ^= rand.nextInt(256);
 		}
 		for(int i = data.length - 1; i >= 0; i--){
 			if(i == 0){
