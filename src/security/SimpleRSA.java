@@ -9,6 +9,7 @@ import java.util.Random;
 import converter.Base64;
 import converter.RadixConverter;
 import math.Functions;
+import util.ArrayUtility;
 
 /**
  * 簡単な公開鍵暗号アルゴリズム
@@ -19,38 +20,6 @@ import math.Functions;
  * @param decrypt 文字列を復号化する
  */
 public class SimpleRSA {
-
-	/**
-	 * キーペアのクラス
-	 *
-	 * @param getPublicKey 公開鍵を取得
-	 * @param getPrivateKey 秘密鍵を取得
-	 */
-	public static class KeyPair {
-		public static class Key {
-			public String exponent;
-			public String modules;
-			public Key(String exponent, String modules) {
-				this.exponent = exponent;
-				this.modules = modules;
-			}
-		}
-
-		private Key publicKey;
-		private Key privateKey;
-
-		public KeyPair(Key publicKey, Key privateKey) {
-			this.publicKey = publicKey;
-			this.privateKey = privateKey;
-		}
-
-		public Key getPublicKey() {
-			return publicKey;
-		}
-		public Key getPrivateKey() {
-			return privateKey;
-		}
-	}
 
 	/**
 	 * 公開鍵と秘密鍵のキーペアを生成する
@@ -105,7 +74,7 @@ public class SimpleRSA {
 	 */
 	public static BigInteger crypt(BigInteger data, KeyPair.Key key) {
 		BigInteger e = new BigInteger(key.exponent);
-		BigInteger m = new BigInteger(key.modules);
+		BigInteger m = new BigInteger(key.modulus);
 		return data.modPow(e, m);
 	}
 
@@ -182,26 +151,31 @@ public class SimpleRSA {
 	/**
 	 * テストする
 	 */
-	public static void test() {
-		KeyPair keyPair = generateKey(1024);
+	public static void test(String... params) {
+		System.out.println("-----テスト開始-----");
 
-		BigInteger n = new BigInteger(keyPair.privateKey.modules);
+		// キー生成
+		KeyPair keyPair = SimpleRSA.generateKey(1024);
 
-		for (BigInteger i = BigInteger.ONE;
-				i.compareTo(n) <= -1 && i.compareTo(new BigInteger("3")) <= -1;
-				i = i.add(BigInteger.ONE)) {
-			BigInteger data = i;
-
-			// 暗号化
-			BigInteger enc = crypt(data, keyPair.publicKey);
-			// 復号化
-			BigInteger dec = crypt(enc, keyPair.privateKey);
-
-			// 平文⇒ 暗号データ⇒ 復号データ を出力
-			System.out.println(data + "⇒\t" + enc + "⇒\t" + dec);
-			if (!data.equals(dec))
-				throw new IllegalStateException("復号化エラー");
+		// テスト用の値
+		String[] plainTexts = {"平文test!!,./\\-^", "あいうえおabc", "012345.67890"};
+		if (params != null && params.length > 0) {
+			plainTexts = ArrayUtility.concat(plainTexts, params);
 		}
+
+		for (String text : plainTexts) {
+			System.out.println("平文データ: " + text);
+			String enc = SimpleRSA.encrypt(text, keyPair.getPublicKey());
+			System.out.println("暗号データ: " + enc);
+			String dec = SimpleRSA.decrypt(enc, keyPair.getPrivateKey());
+			System.out.println("復号データ: " + dec);
+
+			if (!text.equals(dec)) {
+				throw new AssertionError("[" + text + "] != [" + dec + "]");
+			}
+		}
+
+		System.out.println("-----テスト完了-----");
 	}
 
 }
