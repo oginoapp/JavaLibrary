@@ -165,10 +165,10 @@ public class SimpleRSA {
 		BigInteger intData = new BigInteger(byteData);
 
 		// 復号化
-		BigInteger dnc = crypt(intData, key);
+		BigInteger dec = crypt(intData, key);
 
 		// 整数 ⇒ byte配列
-		byteData = dnc.toByteArray();
+		byteData = dec.toByteArray();
 
 		// byte配列 ⇒ 文字列
 		result = new String(byteData, StandardCharsets.UTF_8);
