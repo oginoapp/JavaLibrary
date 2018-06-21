@@ -22,6 +22,36 @@ public class ArrayUtility{
 	}
 
 	/**
+	 * byte配列の連結を行う
+	 * @param arr1 配列１
+	 * @param arr2 配列２
+	 * @return 連結された配列
+	 */
+	public static byte[] concat(byte[] arr1, byte[] arr2){
+		byte[] result = new byte[arr1.length + arr2.length];
+
+		System.arraycopy(arr1, 0, result, 0, arr1.length);
+		System.arraycopy(arr2, 0, result, arr1.length, arr2.length);
+
+		return result;
+	}
+
+	/**
+	 * int配列の連結を行う
+	 * @param arr1 配列１
+	 * @param arr2 配列２
+	 * @return 連結された配列
+	 */
+	public static int[] concat(int[] arr1, int[] arr2){
+		int[] result = new int[arr1.length + arr2.length];
+
+		System.arraycopy(arr1, 0, result, 0, arr1.length);
+		System.arraycopy(arr2, 0, result, arr1.length, arr2.length);
+
+		return result;
+	}
+
+	/**
 	 * 配列の中に指定した要素が存在するかどうかを確認する
 	 * @param arr 配列
 	 * @param value 指定した要素
